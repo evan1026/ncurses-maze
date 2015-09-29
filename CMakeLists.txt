@@ -6,9 +6,10 @@ set(SOURCE_DIR "src")
 
 set(CMAKE_CXX_FLAGS "-std=c++11 -Wall ${CMAKE_CXX_FLAGS}")
 
-add_executable(main "${SOURCE_DIR}/main.cpp")
+add_executable(mazegame "${SOURCE_DIR}/main.cpp"
+                        "${SOURCE_DIR}/maze.cpp")
 
 SET(CURSES_USE_NCURSES TRUE)
 find_package(Curses REQUIRED)
-target_link_libraries(main ${CURSES_LIBRARIES})
+target_link_libraries(mazegame ${CURSES_LIBRARIES})
 include_directories(${CURSES_INCLUDE_DIR})

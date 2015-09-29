@@ -3,9 +3,22 @@
 #include <ncurses.h>
 #include <signal.h>
 
+#include "docopt.c"
+
+#include "maze.h"
+
 void resizeHandler(int);
 
-int main() {
+int main(int argc, char* argv[]) {
+
+    /* Easy command parsing with docopt.c. Too bad it's only a WIP and can't do anything but options (-h, --version, etc.)*/
+    //DocoptArgs args = docopt(argc, argv, /* help */ 1, /* version */ "0.0.1");
+
+    //Stand-ins until docopt starts working or I become crazy/desperate enough to parse arguments myself.
+    int width = 10,
+        height = 10;
+
+    Maze maze(width, height);
 
     /* Init ncurses window */
     initscr();
@@ -23,10 +36,6 @@ int main() {
     
         if (ch == KEY_ENTER || ch == '\n') {
             looping = false;
-        } else if (isascii(ch) && isprint(ch)) {
-            echochar(ch);
-        } else {
-            printw("(%d)", ch);
         }
     }
 
