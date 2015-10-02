@@ -8,17 +8,18 @@ class IndexOutOfBoundsException: public std::exception {
     
     std::string d;
 
-    IndexOutOfBoundsException();
-
 public:
-    IndexOutOfBoundsException(std::string details) : d(details) {}
-
-    virtual const char* what() const throw() {
-        return "Index was out of bounds.";
+    IndexOutOfBoundsException() : d("") {}
+    IndexOutOfBoundsException(std::string details) {
+        d = "Index was out of bounds. " + details;
     }
 
-    std::string details() {
-        return d;
+    void setDetails(std::string details) {
+        d = details;
+    }
+
+    virtual const char* what() const throw() {
+        return d.c_str();
     }
 };
 

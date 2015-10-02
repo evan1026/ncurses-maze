@@ -4,10 +4,11 @@ project(ncurses-learning)
 
 set(SOURCE_DIR "src")
 
-set(CMAKE_CXX_FLAGS "-std=c++11 -Wall ${CMAKE_CXX_FLAGS}")
+set(CMAKE_CXX_FLAGS "-g -std=c++11 -Wall ${CMAKE_CXX_FLAGS}")
 
 add_executable(mazegame "${SOURCE_DIR}/main.cpp"
-                        "${SOURCE_DIR}/maze.cpp")
+                        "${SOURCE_DIR}/Maze.cpp"
+                        "${SOURCE_DIR}/MazeCells.cpp")
 
 SET(CURSES_USE_NCURSES TRUE)
 find_package(Curses REQUIRED)

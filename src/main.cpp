@@ -5,7 +5,7 @@
 
 #include "docopt.c"
 
-#include "maze.h"
+#include "Maze.h"
 
 void resizeHandler(int);
 
@@ -18,29 +18,39 @@ int main(int argc, char* argv[]) {
     int width = 10,
         height = 10;
 
-    Maze maze(width, height);
+    try{
+        Maze maze(width, height);
 
-    /* Init ncurses window */
-    initscr();
-    cbreak();
-    noecho();
-    keypad(stdscr, TRUE);
+        /* Init ncurses window */
+        initscr();
+        cbreak();
+        noecho();
+        keypad(stdscr, TRUE);
 
-    /* Init signal handler */
-    signal(SIGWINCH, resizeHandler);
+        /* Init signal handler */
+        signal(SIGWINCH, resizeHandler);
 
-    /* Loop on input */
-    bool looping = true;
-    while (looping) {
-        int ch = getch();
+        printw(maze.render().c_str());
+
+        /* Loop on input */
+        bool looping = true;
+        while (looping) {
+            int ch = getch();
     
-        if (ch == KEY_ENTER || ch == '\n') {
-            looping = false;
+            if (ch == KEY_ENTER || ch == '\n') {
+                looping = false;
+            }
         }
-    }
+        
+        /* Cleanup */
+        endwin();
 
-    /* Cleanup */
-    endwin();
+    } catch (std::exception& e) {
+        endwin(); //The only reason I'm having an endwin in each section is I need to end curses before I print the exception details
+        std::cout << e.what() << std::endl;
+    } 
+
+
 }
 
 void resizeHandler(int sig) {

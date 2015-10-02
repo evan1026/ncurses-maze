@@ -6,11 +6,12 @@
 
 class Maze{
     int width, height;
+    MazeCells cells;
 
     void generate();
 
 public:
-    Maze(int w, int h) : width(w), height(h) {
+    Maze(int w, int h) : width(w), height(h), cells(2 * w + 1, 2 * h + 1) {
         generate();
     }
 

@@ -1,6 +1,8 @@
 #ifndef MAZECELLS_H
 #define MAZECELLS_H
 
+#include <sstream>
+
 #include "Point.h"
 #include "IndexOutOfBoundsException.h"
 
@@ -13,33 +15,52 @@ enum MazeCell {
 class MazeCells {
     MazeCell** cells;
     int width, height;
+    
+    static const Point left;
+    static const Point right;
+    static const Point up;
+    static const Point down;
 
 public:
-    MazeCells(int w, int h) : width(w), height(h) {
-        cells = new MazeCell*[width];
-        for (int i = 0; i < width; ++i)
-            cells[i] = new MazeCell[height];
+    MazeCells(int w, int h);
+    MazeCell get(int x, int y);
+    MazeCell get(Point p);
+    void set(int x, int y, MazeCell c);
+    void set(Point p, MazeCell c);
+    bool isUnconnected(int x, int y);
+    bool isUnconnected(Point p);
 
-        for (int i = 0; i < width; ++i) {
-            for (int j = 0; j < height; ++j) {
-                if (i % 2 == 1 && j % 2 == 1)
-                    cells[i][j] = MazeCell::OPEN;
-                else
-                    cells[i][j] = MazeCell::WALL;
-            }
-        }
+    int getHeight() {
+        return height;
+    }
+    int getWidth() {
+        return width;
+    }
+    
+    MazeCell upperNeighbor(Point p) {
+        return get(p + up);
+    }
+    MazeCell lowerNeighbor(Point p) {
+        return get(p + down);
+    }
+    MazeCell rightNeighbor(Point p) {
+        return get(p + right);
+    }
+    MazeCell leftNeighbor(Point p) {
+        return get(p + left);
     }
 
-    MazeCell get(int x, int y) {
-        if (x < width && x >= 0 && y < height && y >= 0)
-            return cells[x][y];
-
-        return MazeCell::NONE;
+    MazeCell upperNeighbor(int x, int y) {
+        return upperNeighbor(Point(x,y));
     }
-
-    void set(int x, int y) {
-        if (!(x < width && x >= 0 && y < height && y >= 0))
-            throw IndexOutOfBoundsException("MazeCells index invalid.");
+    MazeCell lowerNeighbor(int x, int y) {
+        return lowerNeighbor(Point(x,y));
+    }
+    MazeCell leftNeighbor(int x, int y) {
+        return leftNeighbor(Point(x,y));
+    }
+    MazeCell rightNeighbor(int x, int y) {
+        return rightNeighbor(Point(x,y));
     }
 };
 
