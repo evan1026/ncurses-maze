@@ -6,8 +6,8 @@
 
 const Point MazeCells::left  = Point(-1,  0);
 const Point MazeCells::right = Point( 1,  0);
-const Point MazeCells::up    = Point( 0,  1);
-const Point MazeCells::down  = Point( 0, -1);
+const Point MazeCells::up    = Point( 0, -1);
+const Point MazeCells::down  = Point( 0,  1);
 
 MazeCells::MazeCells(int w, int h) : width(w), height(h) {
     cells = new MazeCell*[width];
@@ -22,6 +22,12 @@ MazeCells::MazeCells(int w, int h) : width(w), height(h) {
                 cells[i][j] = MazeCell::WALL;
         }
     }
+}
+
+MazeCells::~MazeCells() {
+    for (int i = 0; i < width; ++i)
+        delete[] cells[i];
+    delete[] cells;
 }
 
 MazeCell MazeCells::get(int x, int y) {

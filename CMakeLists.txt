@@ -4,7 +4,16 @@ project(ncurses-learning)
 
 set(SOURCE_DIR "src")
 
-set(CMAKE_CXX_FLAGS "-g -std=c++11 -Wall ${CMAKE_CXX_FLAGS}")
+#set(CMAKE_CXX_FLAGS "-O1 -std=c++11 -Wall ${CMAKE_CXX_FLAGS}")
+
+#######################
+# DEBUG BUILD OPTIONS #
+#######################
+set(DEBUG_FLAGS "-O0 -g -fno-omit-frame-pointer -fno-optimize-sibling-calls -std=c++11 -Wall ${CMAKE_CXX_FLAGS}")
+#set(DEBUG_FLAGS "-fsanitize=memory ${DEBUG_FLAGS}")
+#set(DEBUG_FLAGS "-fsanitize=address ${DEBUG_FLAGS}")
+set(CMAKE_CXX_FLAGS ${DEBUG_FLAGS})
+
 
 add_executable(mazegame "${SOURCE_DIR}/main.cpp"
                         "${SOURCE_DIR}/Maze.cpp"

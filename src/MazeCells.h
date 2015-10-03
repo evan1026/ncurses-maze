@@ -23,6 +23,7 @@ class MazeCells {
 
 public:
     MazeCells(int w, int h);
+    ~MazeCells();
     MazeCell get(int x, int y);
     MazeCell get(Point p);
     void set(int x, int y, MazeCell c);

@@ -9,7 +9,7 @@ class IndexOutOfBoundsException: public std::exception {
     std::string d;
 
 public:
-    IndexOutOfBoundsException() : d("") {}
+    IndexOutOfBoundsException() : d("Index was out of bounds.") {}
     IndexOutOfBoundsException(std::string details) {
         d = "Index was out of bounds. " + details;
     }

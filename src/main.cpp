@@ -15,8 +15,8 @@ int main(int argc, char* argv[]) {
     //DocoptArgs args = docopt(argc, argv, /* help */ 1, /* version */ "0.0.1");
 
     //Stand-ins until docopt starts working or I become crazy/desperate enough to parse arguments myself.
-    int width = 10,
-        height = 10;
+    int width = 25,
+        height = 25;
 
     try{
         Maze maze(width, height);
@@ -36,7 +36,7 @@ int main(int argc, char* argv[]) {
         bool looping = true;
         while (looping) {
             int ch = getch();
-    
+
             if (ch == KEY_ENTER || ch == '\n') {
                 looping = false;
             }
