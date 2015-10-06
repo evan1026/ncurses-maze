@@ -1,14 +1,14 @@
 #include <sstream>
 #include <stack>
-
-/* Uncomment along with later lines to see maze generation in action */
-//#include <iostream>
+#include <ncurses.h>
+#include <chrono>
+#include <thread>
 
 #include "MazeCells.h"
 #include "Maze.h"
 #include "Point.h"
 
-void Maze::generate() {
+void Maze::generate(bool animate, int animationDelay) {
 
     srand(time(NULL));
 
@@ -27,9 +27,14 @@ void Maze::generate() {
             pointStack.push(destCell);
         }
 
-        /* Uncomment to see the maze generation in action */
-        //std::cout << render() << std::endl;
-        //std::cin.get();
+        //clear();
+        if (!pointStack.empty() && animate) {
+            Point cursorPos = pointStack.top();
+            render();
+            move(cursorPos.y, cursorPos.x);
+            refresh();
+            std::this_thread::sleep_for(std::chrono::milliseconds(animationDelay));
+        }
     }
 }
 
@@ -62,34 +67,81 @@ Point Maze::getRandomUnvisitedDirection(Point p) {
 
 }
 
-std::string Maze::render() {
-    std::stringstream ss;
+void Maze::render() {
+    Point cursorPos;
+    getyx(stdscr, cursorPos.y, cursorPos.x);
+    move(0,0);
     for (int y = 0; y < cells.getHeight(); ++y) {
         for (int x = 0; x < cells.getWidth(); ++x) {
-            if (cells.get(x,y) == MazeCell::OPEN) ss << " ";
+            if (cells.get(x,y) == MazeCell::OPEN) printw(" ");
             else {
                 MazeCell up    = cells.upperNeighbor(x,y),
                          down  = cells.lowerNeighbor(x,y),
                          left  = cells.leftNeighbor(x,y),
                          right = cells.rightNeighbor(x,y);
 
-                if (right == MazeCell::WALL || left == MazeCell::WALL) {
-                    if (up == MazeCell::WALL || down == MazeCell::WALL) {
-                        ss << "+";
-                    } else {
-                        ss << "-";
-                    }
-                } else {
-                    if (up == MazeCell::WALL || down == MazeCell::WALL) {
-                        ss << "|";
-                    } else {
-                        ss << " ";
-                    }
+                short flags = 0;
+                if (up    == MazeCell::WALL) flags |= 0b0001;
+                if (down  == MazeCell::WALL) flags |= 0b0010;
+                if (left  == MazeCell::WALL) flags |= 0b0100;
+                if (right == MazeCell::WALL) flags |= 0b1000;
+
+                switch (flags) {
+                    case 0b1111:
+                        addch(ACS_PLUS);
+                        break;
+                    case 0b1110:
+                        addch(ACS_TTEE);
+                        break;
+                    case 0b1101:
+                        addch(ACS_BTEE);
+                        break;
+                    case 0b1011:
+                        addch(ACS_LTEE);
+                        break;
+                    case 0b0111:
+                        addch(ACS_RTEE);
+                        break;
+                    case 0b1100:
+                        addch(ACS_HLINE);
+                        break;
+                    case 0b1010:
+                        addch(ACS_ULCORNER);
+                        break;
+                    case 0b1001:
+                        addch(ACS_LLCORNER);
+                        break;
+                    case 0b0110:
+                        addch(ACS_URCORNER);
+                        break;
+                    case 0b0101:
+                        addch(ACS_LRCORNER);
+                        break;
+                    case 0b0011:
+                        addch(ACS_VLINE);
+                        break;
+                    case 0b1000:
+                        addch(ACS_HLINE);
+                        break;
+                    case 0b0100:
+                        addch(ACS_HLINE);
+                        break;
+                    case 0b0010:
+                        addch(ACS_VLINE);
+                        break;
+                    case 0b0001:
+                        addch(ACS_VLINE);
+                        break;
+                    case 0b0000:
+                        printw("!"); //because it shouldn't happen
+                        break;
+                    default:
+                        printw("?"); //because it really shouldn't happen
+                        break;
                 }
             }
         }
-        ss << "\n";
+        printw("\n");
     }
-
-    return ss.str();
+    move(cursorPos.y, cursorPos.x);
 }

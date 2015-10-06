@@ -19,7 +19,6 @@ int main(int argc, char* argv[]) {
         height = 25;
 
     try{
-        Maze maze(width, height);
 
         /* Init ncurses window */
         initscr();
@@ -29,8 +28,9 @@ int main(int argc, char* argv[]) {
 
         /* Init signal handler */
         signal(SIGWINCH, resizeHandler);
-
-        printw(maze.render().c_str());
+        Maze maze(width, height, true, 50);
+        maze.render();
+        move(1,1);
 
         /* Loop on input */
         bool looping = true;
