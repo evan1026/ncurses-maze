@@ -32,4 +32,11 @@ struct Point {
     }
 };
 
+inline Point operator*(const Point& p, const int& i) {
+    return Point(p.x * i, p.y * i);
+}
+inline Point operator*(const int& i, const Point& p) {
+    return p * i;
+}
+
 #endif
