@@ -15,8 +15,8 @@ int main(int argc, char* argv[]) {
     //DocoptArgs args = docopt(argc, argv, /* help */ 1, /* version */ "0.0.1");
 
     //Stand-ins until docopt starts working or I become crazy/desperate enough to parse arguments myself.
-    int width = 25,
-        height = 25;
+    int width = 100,
+        height = 30;
 
     try{
 
@@ -25,10 +25,16 @@ int main(int argc, char* argv[]) {
         cbreak();
         noecho();
         keypad(stdscr, TRUE);
+        start_color();
+        init_pair(1, COLOR_BLACK, COLOR_RED);
+        init_pair(2, COLOR_BLACK, COLOR_BLUE);
+        init_pair(3, COLOR_BLACK, COLOR_WHITE);
 
         /* Init signal handler */
         signal(SIGWINCH, resizeHandler);
-        Maze maze(width, height, true, 50);
+
+        /* Init maze */
+        Maze maze(width, height, true, 25);
         maze.render();
         move(1,1);
 
@@ -37,9 +43,26 @@ int main(int argc, char* argv[]) {
         while (looping) {
             int ch = getch();
 
+            switch (ch) {
+                case KEY_UP:
+                    maze.tryMoveUp();
+                    break;
+                case KEY_DOWN:
+                    maze.tryMoveDown();
+                    break;
+                case KEY_LEFT:
+                    maze.tryMoveLeft();
+                    break;
+                case KEY_RIGHT:
+                    maze.tryMoveRight();
+                    break;
+                default:
+                    break;
+            }
             if (ch == KEY_ENTER || ch == '\n') {
                 looping = false;
             }
+
         }
         
         /* Cleanup */

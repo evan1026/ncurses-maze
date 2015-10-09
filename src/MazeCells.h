@@ -6,10 +6,23 @@
 #include "Point.h"
 #include "IndexOutOfBoundsException.h"
 
-enum MazeCell {
-    OPEN,
-    WALL,
-    NONE
+struct MazeCell {
+    enum Type {
+        OPEN,
+        WALL,
+        T_NONE
+    };
+    enum Properties {
+        PART_OF_PATH,
+        NOT_PART_OF_PATH,
+        P_NONE
+    };
+
+    MazeCell::Type type;
+    MazeCell::Properties properties;
+
+    MazeCell (MazeCell::Type _t, MazeCell::Properties _p) : type(_t), properties(_p) {}
+    MazeCell () : type(MazeCell::Type::T_NONE), properties(MazeCell::Properties::P_NONE) {}
 };
 
 class MazeCells {
@@ -26,8 +39,16 @@ public:
     ~MazeCells();
     MazeCell get(int x, int y);
     MazeCell get(Point p);
+    MazeCell::Type getType(int x, int y);
+    MazeCell::Type getType(Point p);
+    MazeCell::Properties getProperties(int x, int y);
+    MazeCell::Properties getProperties(Point p);
     void set(int x, int y, MazeCell c);
     void set(Point p, MazeCell c);
+    void setType(int x, int y, MazeCell::Type t);
+    void setType(Point p, MazeCell::Type t);
+    void setProperties(int x, int y, MazeCell::Properties pr);
+    void setProperties(Point p, MazeCell::Properties pr);
     bool isUnconnected(int x, int y);
     bool isUnconnected(Point p);
 

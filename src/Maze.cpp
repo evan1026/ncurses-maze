@@ -4,6 +4,7 @@
 #include <chrono>
 #include <thread>
 
+#include "Direction.h"
 #include "MazeCells.h"
 #include "Maze.h"
 #include "Point.h"
@@ -13,17 +14,17 @@ void Maze::generate(bool animate, int animationDelay) {
     srand(time(NULL));
 
     std::stack<Point> pointStack;
-    pointStack.push(Point(1,1));
+    pointStack.push(Point(1, 1));
 
     while (!pointStack.empty()) {
         Point p = pointStack.top();
         Point neighborDirection = getRandomUnvisitedDirection(p);
-        if (neighborDirection == Point(0,0)) { //All neighbors visited
+        if (neighborDirection == Point(0, 0)) { //All neighbors visited
             pointStack.pop();
         } else {
             Point wallInBetween = p + neighborDirection;
             Point destCell = wallInBetween + neighborDirection;
-            cells.set(wallInBetween, MazeCell::OPEN);
+            cells.setType(wallInBetween, MazeCell::Type::OPEN);
             pointStack.push(destCell);
         }
 
@@ -44,18 +45,12 @@ void Maze::generate(bool animate, int animationDelay) {
 //Returns (0,0) when no unvisited neighbor exists
 //Returns the direction to move to get to the unvisited neighbor
 Point Maze::getRandomUnvisitedDirection(Point p) {
-    //Directions don't change, and they're only needed here, so make
-    //them static to the function itself
-    static Point directions[] = {Point(-1,  0),
-                                 Point( 1,  0),
-                                 Point( 0, -1),
-                                 Point( 0,  1)};
 
     short directionIndex = rand() % 4;
     short attempts = 0;
 
     //Cool thing about isUnconnected is it inadvertently makes sure we don't go off the edge as well
-    while (!cells.isUnconnected(p + 2 * directions[directionIndex]) && attempts < 4) {
+    while (!cells.isUnconnected(p + 2 * Direction::directions[directionIndex]) && attempts < 4) {
         directionIndex = (directionIndex + 1) % 4;
         attempts++;
     }
@@ -63,7 +58,7 @@ Point Maze::getRandomUnvisitedDirection(Point p) {
     if (attempts == 4)
         return Point(0,0);
 
-    return directions[directionIndex];
+    return Direction::directions[directionIndex];
 
 }
 
@@ -73,18 +68,32 @@ void Maze::render() {
     move(0,0);
     for (int y = 0; y < cells.getHeight(); ++y) {
         for (int x = 0; x < cells.getWidth(); ++x) {
-            if (cells.get(x,y) == MazeCell::OPEN) printw(" ");
-            else {
-                MazeCell up    = cells.upperNeighbor(x,y),
-                         down  = cells.lowerNeighbor(x,y),
-                         left  = cells.leftNeighbor(x,y),
-                         right = cells.rightNeighbor(x,y);
+            if (cells.getType(x,y) == MazeCell::Type::OPEN) {
+                if (cells.getProperties(x,y) == MazeCell::Properties::PART_OF_PATH) {
+                    attron(COLOR_PAIR(2));
+                    printw(" ");
+                    attroff(COLOR_PAIR(2));
+                } else if (cells.getProperties(x,y) == MazeCell::Properties::NOT_PART_OF_PATH) {
+                    attron(COLOR_PAIR(1));
+                    printw(" ");
+                    attroff(COLOR_PAIR(1));
+                } else {
+                    printw(" ");
+                }
+            } else {
+                attron(COLOR_PAIR(3));
+                printw(" ");
+                attroff(COLOR_PAIR(3));
+                /*MazeCell::Type up    = cells.upperNeighbor(x,y).type,
+                               down  = cells.lowerNeighbor(x,y).type,
+                               left  = cells.leftNeighbor(x,y).type,
+                               right = cells.rightNeighbor(x,y).type;
 
                 short flags = 0;
-                if (up    == MazeCell::WALL) flags |= 0b0001;
-                if (down  == MazeCell::WALL) flags |= 0b0010;
-                if (left  == MazeCell::WALL) flags |= 0b0100;
-                if (right == MazeCell::WALL) flags |= 0b1000;
+                if (up    == MazeCell::Type::WALL) flags |= 0b0001;
+                if (down  == MazeCell::Type::WALL) flags |= 0b0010;
+                if (left  == MazeCell::Type::WALL) flags |= 0b0100;
+                if (right == MazeCell::Type::WALL) flags |= 0b1000;
 
                 switch (flags) {
                     case 0b1111:
@@ -138,10 +147,29 @@ void Maze::render() {
                     default:
                         printw("?"); //because it really shouldn't happen
                         break;
-                }
+                }*/
             }
         }
         printw("\n");
     }
     move(cursorPos.y, cursorPos.x);
+}
+
+bool Maze::tryMove(Point direction) {
+    if (cells.getType(currentPosition + direction) == MazeCell::Type::OPEN) {
+        if (cells.getProperties(currentPosition + direction) == MazeCell::Properties::PART_OF_PATH) { //backtracking
+            cells.setProperties(currentPosition, MazeCell::Properties::NOT_PART_OF_PATH);
+        } else if (cells.getProperties(currentPosition + direction) == MazeCell::Properties::P_NONE) {
+            cells.setProperties(currentPosition, MazeCell::Properties::PART_OF_PATH); //a little redundant; ensures starting point is highlighted too
+        }
+
+        currentPosition += direction;
+        cells.setProperties(currentPosition, MazeCell::Properties::PART_OF_PATH);
+        move(currentPosition.y, currentPosition.x);
+        render();
+
+        return true;
+    }
+
+    return false;
 }
