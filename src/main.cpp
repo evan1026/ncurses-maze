@@ -2,12 +2,15 @@
 #include <cctype>
 #include <ncurses.h>
 #include <signal.h>
+#include <sys/ioctl.h>
+#include <unistd.h>
 
 #include "docopt.c"
 
 #include "Maze.h"
 
 void resizeHandler(int);
+Maze* theMaze;
 
 int main(int argc, char* argv[]) {
 
@@ -15,28 +18,36 @@ int main(int argc, char* argv[]) {
     //DocoptArgs args = docopt(argc, argv, /* help */ 1, /* version */ "0.0.1");
 
     //Stand-ins until docopt starts working or I become crazy/desperate enough to parse arguments myself.
-    int width = 100,
-        height = 30;
+    //int width = 78,
+    //    height = 26;
 
     try{
+
+        struct winsize w;
+        ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+
+        //if (2 * width + 1 > w.ws_col || 2 * height + 1 > w.ws_row) {
+        //    std::cout << "Terminal not large enough for specified size" << std::endl;
+        //    return 1;
+        //}
 
         /* Init ncurses window */
         initscr();
         cbreak();
         noecho();
         keypad(stdscr, TRUE);
-        start_color();
-        init_pair(1, COLOR_BLACK, COLOR_RED);
-        init_pair(2, COLOR_BLACK, COLOR_BLUE);
-        init_pair(3, COLOR_BLACK, COLOR_WHITE);
+        nodelay(stdscr, TRUE);
 
         /* Init signal handler */
         signal(SIGWINCH, resizeHandler);
 
+        /* Maze cursor invisible */
+        curs_set(0);
+
         /* Init maze */
-        Maze maze(width, height, true, 25);
+        Maze maze((w.ws_col - 1) / 2, (w.ws_row - 1) / 2, false, 25);
+        theMaze = &maze;
         maze.render();
-        move(1,1);
 
         /* Loop on input */
         bool looping = true;
@@ -57,8 +68,10 @@ int main(int argc, char* argv[]) {
                     maze.tryMoveRight();
                     break;
                 default:
+                    maze.render();
                     break;
             }
+
             if (ch == KEY_ENTER || ch == '\n') {
                 looping = false;
             }
@@ -77,9 +90,6 @@ int main(int argc, char* argv[]) {
 }
 
 void resizeHandler(int sig) {
-    int nh, nw;
-    getmaxyx(stdscr, nh, nw);  /* get the new screen size */
-    
-    clear();
-    refresh();
+    endwin();
+    theMaze->render();
 }

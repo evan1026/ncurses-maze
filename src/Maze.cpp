@@ -28,11 +28,9 @@ void Maze::generate(bool animate, int animationDelay) {
             pointStack.push(destCell);
         }
 
-        //clear();
         if (!pointStack.empty() && animate) {
-            Point cursorPos = pointStack.top();
+            currentPosition = pointStack.top();
             render();
-            move(cursorPos.y, cursorPos.x);
             refresh();
             std::this_thread::sleep_for(std::chrono::milliseconds(animationDelay));
         }
@@ -65,25 +63,32 @@ Point Maze::getRandomUnvisitedDirection(Point p) {
 void Maze::render() {
     Point cursorPos;
     getyx(stdscr, cursorPos.y, cursorPos.x);
-    move(0,0);
     for (int y = 0; y < cells.getHeight(); ++y) {
         for (int x = 0; x < cells.getWidth(); ++x) {
+
+            //Default is -1 because I want it to crash while in development
+            //We should never get there, so I want to know if we do
+            int colorIndex = -1;
+
             if (cells.getType(x,y) == MazeCell::Type::OPEN) {
-                if (cells.getProperties(x,y) == MazeCell::Properties::PART_OF_PATH) {
-                    attron(COLOR_PAIR(2));
-                    printw(" ");
-                    attroff(COLOR_PAIR(2));
+                if (Point(x,y) == currentPosition) {
+                    colorIndex = MAZE_COLOR_GREEN;
+                } else if (cells.getProperties(x,y) == MazeCell::Properties::PART_OF_PATH) {
+                    colorIndex = MAZE_COLOR_BLUE;
                 } else if (cells.getProperties(x,y) == MazeCell::Properties::NOT_PART_OF_PATH) {
-                    attron(COLOR_PAIR(1));
-                    printw(" ");
-                    attroff(COLOR_PAIR(1));
+                    colorIndex = MAZE_COLOR_RED;
                 } else {
-                    printw(" ");
+                    colorIndex = MAZE_COLOR_BLACK;
                 }
             } else {
-                attron(COLOR_PAIR(3));
-                printw(" ");
-                attroff(COLOR_PAIR(3));
+                colorIndex = MAZE_COLOR_WHITE;
+
+                /*****************************************
+                 * Planning to move this to another file *
+                 *   (have multple rendering classes)    *
+                 *        Keeping it here for now        *
+                 *       TODO Move to another file       *
+                 *****************************************/
                 /*MazeCell::Type up    = cells.upperNeighbor(x,y).type,
                                down  = cells.lowerNeighbor(x,y).type,
                                left  = cells.leftNeighbor(x,y).type,
@@ -149,10 +154,20 @@ void Maze::render() {
                         break;
                 }*/
             }
+
+            //Just in case the resized and it's now going off-screen
+            int screenx, screeny;
+            getmaxyx(stdscr, screeny, screenx);
+            if (x < screenx && y < screeny) {
+                move(y,x);
+                attron(COLOR_PAIR(colorIndex));
+                addch(' ');
+                attroff(COLOR_PAIR(colorIndex));
+            }
         }
-        printw("\n");
     }
     move(cursorPos.y, cursorPos.x);
+    refresh();
 }
 
 bool Maze::tryMove(Point direction) {
@@ -165,7 +180,6 @@ bool Maze::tryMove(Point direction) {
 
         currentPosition += direction;
         cells.setProperties(currentPosition, MazeCell::Properties::PART_OF_PATH);
-        move(currentPosition.y, currentPosition.x);
         render();
 
         return true;

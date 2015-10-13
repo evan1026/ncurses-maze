@@ -11,6 +11,7 @@
 #define MAZE_COLOR_BLUE  2
 #define MAZE_COLOR_WHITE 3
 #define MAZE_COLOR_GREEN 4
+#define MAZE_COLOR_BLACK 5
 
 class Maze{
     MazeCells cells;
@@ -23,10 +24,12 @@ class Maze{
 public:
 
     Maze (int w, int h, bool animate, int animationDelay) : cells(2 * w + 1, 2 * h + 1) {
+        start_color();
         init_pair(MAZE_COLOR_RED,   COLOR_BLACK, COLOR_RED);
         init_pair(MAZE_COLOR_BLUE,  COLOR_BLACK, COLOR_BLUE);
         init_pair(MAZE_COLOR_WHITE, COLOR_BLACK, COLOR_WHITE);
         init_pair(MAZE_COLOR_GREEN, COLOR_BLACK, COLOR_GREEN);
+        init_pair(MAZE_COLOR_BLACK, COLOR_BLACK, COLOR_BLACK);
         generate(animate, animationDelay);
     }
     Maze (int w, int h, bool animate) : Maze(w,h,animate,50) {}
