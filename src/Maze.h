@@ -15,7 +15,7 @@
 
 class Maze{
     MazeCells cells;
-    Point currentPosition = Point(1,1); //Where we start after generating
+    Point currentPosition;
 
     void generate(bool animate, int animationDelay);
     Point getRandomUnvisitedDirection(Point p);
@@ -31,6 +31,7 @@ public:
         init_pair(MAZE_COLOR_GREEN, COLOR_BLACK, COLOR_GREEN);
         init_pair(MAZE_COLOR_BLACK, COLOR_BLACK, COLOR_BLACK);
         generate(animate, animationDelay);
+        currentPosition = Point(1,1);
     }
     Maze (int w, int h, bool animate) : Maze(w,h,animate,50) {}
     Maze (int w, int h) : Maze(w,h,false,0) {}

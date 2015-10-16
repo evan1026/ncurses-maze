@@ -14,7 +14,7 @@ void Maze::generate(bool animate, int animationDelay) {
     srand(time(NULL));
 
     std::stack<Point> pointStack;
-    pointStack.push(Point(1, 1));
+    pointStack.push(Point(cells.getWidth() - 2, cells.getHeight() - 2));
 
     while (!pointStack.empty()) {
         Point p = pointStack.top();
@@ -154,7 +154,6 @@ void Maze::render() {
                         break;
                 }*/
             }
-
             //Just in case the resized and it's now going off-screen
             int screenx, screeny;
             getmaxyx(stdscr, screeny, screenx);
