@@ -36,6 +36,7 @@ class MazeCells {
 
 public:
     MazeCells(int w, int h);
+    MazeCells(const MazeCells& other) = delete; //copying this guy is a mess, and I never actually need to do it
     ~MazeCells();
     MazeCell get(int x, int y);
     MazeCell get(Point p);

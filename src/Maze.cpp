@@ -14,7 +14,7 @@ void Maze::generate(bool animate, int animationDelay) {
     srand(time(NULL));
 
     std::stack<Point> pointStack;
-    pointStack.push(Point(cells.getWidth() - 2, cells.getHeight() - 2));
+    pointStack.push(end);
 
     while (!pointStack.empty()) {
         Point p = pointStack.top();
@@ -60,7 +60,7 @@ Point Maze::getRandomUnvisitedDirection(Point p) {
 
 }
 
-void Maze::render() {
+/*void renderbeinglefthereincasesomethingbreaks() {
     Point cursorPos;
     getyx(stdscr, cursorPos.y, cursorPos.x);
     for (int y = 0; y < cells.getHeight(); ++y) {
@@ -83,7 +83,7 @@ void Maze::render() {
             } else {
                 colorIndex = MAZE_COLOR_WHITE;
 
-                /*****************************************
+                 *****************************************
                  * Planning to move this to another file *
                  *   (have multple rendering classes)    *
                  *        Keeping it here for now        *
@@ -152,7 +152,7 @@ void Maze::render() {
                     default:
                         printw("?"); //because it really shouldn't happen
                         break;
-                }*/
+                }
             }
             //Just in case the resized and it's now going off-screen
             int screenx, screeny;
@@ -167,7 +167,7 @@ void Maze::render() {
     }
     move(cursorPos.y, cursorPos.x);
     refresh();
-}
+}*/
 
 bool Maze::tryMove(Point direction) {
     if (cells.getType(currentPosition + direction) == MazeCell::Type::OPEN) {

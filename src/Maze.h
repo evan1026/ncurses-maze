@@ -4,18 +4,16 @@
 #include <string>
 
 #include "Direction.h"
+#include "ColorMazeRenderer.h"
 #include "MazeCells.h"
+#include "MazeRenderer.h"
 #include "Point.h"
-
-#define MAZE_COLOR_RED   1
-#define MAZE_COLOR_BLUE  2
-#define MAZE_COLOR_WHITE 3
-#define MAZE_COLOR_GREEN 4
-#define MAZE_COLOR_BLACK 5
 
 class Maze{
     MazeCells cells;
     Point currentPosition;
+    Point end;
+    MazeRenderer* renderer = new ColorMazeRenderer();
 
     void generate(bool animate, int animationDelay);
     Point getRandomUnvisitedDirection(Point p);
@@ -24,19 +22,23 @@ class Maze{
 public:
 
     Maze (int w, int h, bool animate, int animationDelay) : cells(2 * w + 1, 2 * h + 1) {
-        start_color();
-        init_pair(MAZE_COLOR_RED,   COLOR_BLACK, COLOR_RED);
-        init_pair(MAZE_COLOR_BLUE,  COLOR_BLACK, COLOR_BLUE);
-        init_pair(MAZE_COLOR_WHITE, COLOR_BLACK, COLOR_WHITE);
-        init_pair(MAZE_COLOR_GREEN, COLOR_BLACK, COLOR_GREEN);
-        init_pair(MAZE_COLOR_BLACK, COLOR_BLACK, COLOR_BLACK);
+        end = Point(cells.getWidth() - 2, cells.getHeight() - 2);
         generate(animate, animationDelay);
         currentPosition = Point(1,1);
     }
     Maze (int w, int h, bool animate) : Maze(w,h,animate,50) {}
     Maze (int w, int h) : Maze(w,h,false,0) {}
+    ~Maze() {
+        delete renderer;
+    }
 
-    void render();
+    void render() {
+        renderer->render(cells, currentPosition, end);
+    }
+
+    bool win() {
+        return end == currentPosition;
+    }
 
     Point getCurrentPosition() { return currentPosition; }
 

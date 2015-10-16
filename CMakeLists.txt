@@ -15,9 +15,11 @@ set(DEBUG_FLAGS "-O0 -g -fno-omit-frame-pointer -fno-optimize-sibling-calls -std
 set(CMAKE_CXX_FLAGS ${DEBUG_FLAGS})
 
 
-add_executable(mazegame "${SOURCE_DIR}/main.cpp"
+add_executable(mazegame "${SOURCE_DIR}/ColorMazeRenderer.cpp"
+                        "${SOURCE_DIR}/main.cpp"
                         "${SOURCE_DIR}/Maze.cpp"
-                        "${SOURCE_DIR}/MazeCells.cpp")
+                        "${SOURCE_DIR}/MazeCells.cpp"
+                        "${SOURCE_DIR}/MazeRenderer.cpp")
 
 SET(CURSES_USE_NCURSES TRUE)
 find_package(Curses REQUIRED)

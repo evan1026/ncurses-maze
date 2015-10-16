@@ -1,8 +1,10 @@
 #include <iostream>
 #include <cctype>
+#include <chrono>
 #include <ncurses.h>
 #include <signal.h>
 #include <sys/ioctl.h>
+#include <thread>
 #include <unistd.h>
 
 #include "docopt.c"
@@ -45,7 +47,8 @@ int main(int argc, char* argv[]) {
         curs_set(0);
 
         /* Init maze */
-        Maze maze((w.ws_col - 1) / 2, (w.ws_row - 1) / 2, false, 25);
+        //Maze maze((w.ws_col - 1) / 2, (w.ws_row - 1) / 2, false, 25);
+        Maze maze(30, 15, false);
         theMaze = &maze;
         maze.render();
 
@@ -72,14 +75,16 @@ int main(int argc, char* argv[]) {
                     break;
             }
 
-            if (ch == KEY_ENTER || ch == '\n') {
+            if (ch == KEY_ENTER || ch == '\n' || maze.win()) {
                 looping = false;
             }
 
+            std::this_thread::sleep_for(std::chrono::milliseconds(33)); //33 ms ~ 30 fps
         }
         
         /* Cleanup */
         endwin();
+        if (maze.win()) std::cout << "YOU WIN" << std::endl;
 
     } catch (std::exception& e) {
         endwin(); //The only reason I'm having an endwin in each section is I need to end curses before I print the exception details
