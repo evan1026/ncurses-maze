@@ -14,16 +14,20 @@ set(DEBUG_FLAGS "-O0 -g -fno-omit-frame-pointer -fno-optimize-sibling-calls -std
 #set(DEBUG_FLAGS "-fsanitize=address ${DEBUG_FLAGS}")
 set(CMAKE_CXX_FLAGS ${DEBUG_FLAGS})
 
+set(EXECUTABLE_NAME mazegame)
 
-add_executable(mazegame "${SOURCE_DIR}/ASCIIMazeRenderer.cpp"
-                        "${SOURCE_DIR}/ColorMazeRenderer.cpp"
-                        "${SOURCE_DIR}/EASCIIMazeRenderer.cpp"
-                        "${SOURCE_DIR}/main.cpp"
-                        "${SOURCE_DIR}/Maze.cpp"
-                        "${SOURCE_DIR}/MazeCells.cpp"
-                        "${SOURCE_DIR}/MazeRenderer.cpp")
+set(SOURCES "" CACHE STRING "Sources for project" FORCE)
+get_filename_component(ROOT_DIR_ABS ${SOURCE_DIR} ABSOLUTE)
+get_filename_component(ROOT_DIR ${ROOT_DIR_ABS} DIRECTORY)
+add_subdirectory("${SOURCE_DIR}")
+include_directories(${SOURCE_DIR})
+
+string(REPLACE "\n" " " SOURCES_WITHOUT_NL ${SOURCES})
+set(SOURCES ${SOURCES_WITHOUT_NL} CACHE STRING "Sources for project" FORCE)
+string(REPLACE " " ";" SOURCE_LIST ${SOURCES})
+add_executable(${EXECUTABLE_NAME} ${SOURCE_LIST})
 
 SET(CURSES_USE_NCURSES TRUE)
 find_package(Curses REQUIRED)
-target_link_libraries(mazegame ${CURSES_LIBRARIES})
+target_link_libraries(${EXECUTABLE_NAME} ${CURSES_LIBRARIES})
 include_directories(${CURSES_INCLUDE_DIR})

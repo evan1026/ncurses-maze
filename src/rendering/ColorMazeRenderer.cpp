@@ -1,8 +1,8 @@
 #include <ncurses.h>
 
-#include "ColorMazeRenderer.h"
-#include "MazeCells.h"
-#include "Point.h"
+#include "maze/MazeCells.h"
+#include "rendering/ColorMazeRenderer.h"
+#include "utils/Point.h"
 
 void ColorMazeRenderer::renderPos(MazeCells& cells, Point currentPosition, Point end, int x, int y) {
      //Default is -1 because I want it to crash while in development

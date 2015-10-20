@@ -1,15 +1,15 @@
-#include <iostream>
 #include <cctype>
 #include <chrono>
+#include <iostream>
 #include <ncurses.h>
 #include <signal.h>
 #include <sys/ioctl.h>
 #include <thread>
 #include <unistd.h>
 
-#include "docopt.c"
+//#include "docopt.c"
 
-#include "Maze.h"
+#include "maze/Maze.h"
 
 void resizeHandler(int);
 Maze* theMaze;

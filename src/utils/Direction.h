@@ -1,7 +1,7 @@
 #ifndef DIRECTION_H
 #define DIRECTION_H
 
-#include "Point.h"
+#include "utils/Point.h"
 
 namespace Direction {
     const Point UP    = Point( 0, -1);

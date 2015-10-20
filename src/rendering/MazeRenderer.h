@@ -1,7 +1,7 @@
 #ifndef MAZE_RENDERER_H
 #define MAZE_RENDERER_H
 
-#include "MazeCells.h"
+#include "maze/MazeCells.h"
 
 class MazeRenderer {
     public:

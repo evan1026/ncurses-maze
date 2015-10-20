@@ -3,8 +3,8 @@
 
 #include <sstream>
 
-#include "Point.h"
-#include "IndexOutOfBoundsException.h"
+#include "utils/IndexOutOfBoundsException.h"
+#include "utils/Point.h"
 
 struct MazeCell {
     enum Type {

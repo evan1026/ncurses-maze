@@ -3,13 +3,13 @@
 
 #include <string>
 
-#include "ASCIIMazeRenderer.h"
-#include "ColorMazeRenderer.h"
-#include "Direction.h"
-#include "EASCIIMazeRenderer.h"
-#include "MazeCells.h"
-#include "MazeRenderer.h"
-#include "Point.h"
+#include "maze/MazeCells.h"
+#include "rendering/ASCIIMazeRenderer.h"
+#include "rendering/ColorMazeRenderer.h"
+#include "rendering/EASCIIMazeRenderer.h"
+#include "rendering/MazeRenderer.h"
+#include "utils/Direction.h"
+#include "utils/Point.h"
 
 class Maze{
     MazeCells cells;

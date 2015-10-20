@@ -3,9 +3,9 @@
 
 #include <ncurses.h>
 
-#include "MazeRenderer.h"
-#include "MazeCells.h"
-#include "Point.h"
+#include "maze/MazeCells.h"
+#include "rendering/MazeRenderer.h"
+#include "utils/Point.h"
 
 //defined in the order they need to be supported - see constructor
 #define MAZE_COLOR_BLACK   0

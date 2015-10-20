@@ -1,13 +1,13 @@
+#include <chrono>
+#include <ncurses.h>
 #include <sstream>
 #include <stack>
-#include <ncurses.h>
-#include <chrono>
 #include <thread>
 
-#include "Direction.h"
-#include "MazeCells.h"
-#include "Maze.h"
-#include "Point.h"
+#include "maze/Maze.h"
+#include "maze/MazeCells.h"
+#include "utils/Direction.h"
+#include "utils/Point.h"
 
 void Maze::generate(bool animate, int animationDelay) {
 

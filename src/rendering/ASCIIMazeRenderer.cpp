@@ -1,8 +1,8 @@
 #include <ncurses.h>
 
-#include "ASCIIMazeRenderer.h"
-#include "MazeCells.h"
-#include "Point.h"
+#include "maze/MazeCells.h"
+#include "rendering/ASCIIMazeRenderer.h"
+#include "utils/Point.h"
 
 void ASCIIMazeRenderer::renderPos(MazeCells& cells, Point currentPosition, Point end, int x, int y) {
     move(y,x);

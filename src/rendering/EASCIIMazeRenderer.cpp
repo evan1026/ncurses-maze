@@ -1,8 +1,8 @@
 #include <ncurses.h>
 
-#include "EASCIIMazeRenderer.h"
-#include "MazeCells.h"
-#include "Point.h"
+#include "maze/MazeCells.h"
+#include "rendering/EASCIIMazeRenderer.h"
+#include "utils/Point.h"
 
 void EASCIIMazeRenderer::renderPos(MazeCells& cells, Point currentPosition, Point end, int x, int y) {
     move(y,x);
