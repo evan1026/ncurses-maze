@@ -15,7 +15,9 @@ set(DEBUG_FLAGS "-O0 -g -fno-omit-frame-pointer -fno-optimize-sibling-calls -std
 set(CMAKE_CXX_FLAGS ${DEBUG_FLAGS})
 
 
-add_executable(mazegame "${SOURCE_DIR}/ColorMazeRenderer.cpp"
+add_executable(mazegame "${SOURCE_DIR}/ASCIIMazeRenderer.cpp"
+                        "${SOURCE_DIR}/ColorMazeRenderer.cpp"
+                        "${SOURCE_DIR}/EASCIIMazeRenderer.cpp"
                         "${SOURCE_DIR}/main.cpp"
                         "${SOURCE_DIR}/Maze.cpp"
                         "${SOURCE_DIR}/MazeCells.cpp"

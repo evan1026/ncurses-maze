@@ -5,6 +5,7 @@
 
 #include "MazeRenderer.h"
 #include "MazeCells.h"
+#include "Point.h"
 
 //defined in the order they need to be supported - see constructor
 #define MAZE_COLOR_BLACK   0
@@ -22,6 +23,7 @@
 #define MAZE_COLOR_EMPTY            MAZE_COLOR_BLACK
 #define MAZE_COLOR_WALL             MAZE_COLOR_WHITE
 
+//The best looking renderer
 class ColorMazeRenderer : public MazeRenderer {
     public:
         ColorMazeRenderer() {

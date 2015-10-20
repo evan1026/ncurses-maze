@@ -3,8 +3,10 @@
 
 #include <string>
 
-#include "Direction.h"
+#include "ASCIIMazeRenderer.h"
 #include "ColorMazeRenderer.h"
+#include "Direction.h"
+#include "EASCIIMazeRenderer.h"
 #include "MazeCells.h"
 #include "MazeRenderer.h"
 #include "Point.h"
@@ -13,7 +15,7 @@ class Maze{
     MazeCells cells;
     Point currentPosition;
     Point end;
-    MazeRenderer* renderer = new ColorMazeRenderer();
+    MazeRenderer* renderer;
 
     void generate(bool animate, int animationDelay);
     Point getRandomUnvisitedDirection(Point p);
@@ -22,6 +24,13 @@ class Maze{
 public:
 
     Maze (int w, int h, bool animate, int animationDelay) : cells(2 * w + 1, 2 * h + 1) {
+
+        if (has_colors()) {
+            renderer = new ColorMazeRenderer();
+        } else {
+            renderer = new EASCIIMazeRenderer(); //TODO see if ASCIIMazeRenderer is even needed
+        }
+
         end = Point(cells.getWidth() - 2, cells.getHeight() - 2);
         generate(animate, animationDelay);
         currentPosition = Point(1,1);
@@ -38,6 +47,21 @@ public:
 
     bool win() {
         return end == currentPosition;
+    }
+
+    void setRenderer(MazeRenderer* r) {
+        if (r != renderer) {
+            delete renderer;
+            renderer = r;
+        }
+    }
+
+    //Pointer to const so that they can't render themselves or mess with anything, that's for us only
+    //Really I just want them to be able to get the type
+    //Maybe I'll do something else for that....
+    //TODO type enumeration
+    MazeRenderer const * getRenderer() {
+        return renderer;
     }
 
     Point getCurrentPosition() { return currentPosition; }

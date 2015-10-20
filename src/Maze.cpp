@@ -60,115 +60,6 @@ Point Maze::getRandomUnvisitedDirection(Point p) {
 
 }
 
-/*void renderbeinglefthereincasesomethingbreaks() {
-    Point cursorPos;
-    getyx(stdscr, cursorPos.y, cursorPos.x);
-    for (int y = 0; y < cells.getHeight(); ++y) {
-        for (int x = 0; x < cells.getWidth(); ++x) {
-
-            //Default is -1 because I want it to crash while in development
-            //We should never get there, so I want to know if we do
-            int colorIndex = -1;
-
-            if (cells.getType(x,y) == MazeCell::Type::OPEN) {
-                if (Point(x,y) == currentPosition) {
-                    colorIndex = MAZE_COLOR_GREEN;
-                } else if (cells.getProperties(x,y) == MazeCell::Properties::PART_OF_PATH) {
-                    colorIndex = MAZE_COLOR_BLUE;
-                } else if (cells.getProperties(x,y) == MazeCell::Properties::NOT_PART_OF_PATH) {
-                    colorIndex = MAZE_COLOR_RED;
-                } else {
-                    colorIndex = MAZE_COLOR_BLACK;
-                }
-            } else {
-                colorIndex = MAZE_COLOR_WHITE;
-
-                 *****************************************
-                 * Planning to move this to another file *
-                 *   (have multple rendering classes)    *
-                 *        Keeping it here for now        *
-                 *       TODO Move to another file       *
-                 *****************************************/
-                /*MazeCell::Type up    = cells.upperNeighbor(x,y).type,
-                               down  = cells.lowerNeighbor(x,y).type,
-                               left  = cells.leftNeighbor(x,y).type,
-                               right = cells.rightNeighbor(x,y).type;
-
-                short flags = 0;
-                if (up    == MazeCell::Type::WALL) flags |= 0b0001;
-                if (down  == MazeCell::Type::WALL) flags |= 0b0010;
-                if (left  == MazeCell::Type::WALL) flags |= 0b0100;
-                if (right == MazeCell::Type::WALL) flags |= 0b1000;
-
-                switch (flags) {
-                    case 0b1111:
-                        addch(ACS_PLUS);
-                        break;
-                    case 0b1110:
-                        addch(ACS_TTEE);
-                        break;
-                    case 0b1101:
-                        addch(ACS_BTEE);
-                        break;
-                    case 0b1011:
-                        addch(ACS_LTEE);
-                        break;
-                    case 0b0111:
-                        addch(ACS_RTEE);
-                        break;
-                    case 0b1100:
-                        addch(ACS_HLINE);
-                        break;
-                    case 0b1010:
-                        addch(ACS_ULCORNER);
-                        break;
-                    case 0b1001:
-                        addch(ACS_LLCORNER);
-                        break;
-                    case 0b0110:
-                        addch(ACS_URCORNER);
-                        break;
-                    case 0b0101:
-                        addch(ACS_LRCORNER);
-                        break;
-                    case 0b0011:
-                        addch(ACS_VLINE);
-                        break;
-                    case 0b1000:
-                        addch(ACS_HLINE);
-                        break;
-                    case 0b0100:
-                        addch(ACS_HLINE);
-                        break;
-                    case 0b0010:
-                        addch(ACS_VLINE);
-                        break;
-                    case 0b0001:
-                        addch(ACS_VLINE);
-                        break;
-                    case 0b0000:
-                        printw("!"); //because it shouldn't happen
-                        break;
-                    default:
-                        printw("?"); //because it really shouldn't happen
-                        break;
-                }
-            }
-            //Just in case the resized and it's now going off-screen
-            int screenx, screeny;
-            getmaxyx(stdscr, screeny, screenx);
-            if (x < screenx && y < screeny) {
-                move(y,x);
-                attron(COLOR_PAIR(colorIndex));
-                addch(' ');
-                attroff(COLOR_PAIR(colorIndex));
-            }
-        }
-    }
-    move(cursorPos.y, cursorPos.x);
-    refresh();
-}*/
-
 bool Maze::tryMove(Point direction) {
     if (cells.getType(currentPosition + direction) == MazeCell::Type::OPEN) {
         if (cells.getProperties(currentPosition + direction) == MazeCell::Properties::PART_OF_PATH) { //backtracking
@@ -179,6 +70,7 @@ bool Maze::tryMove(Point direction) {
 
         currentPosition += direction;
         cells.setProperties(currentPosition, MazeCell::Properties::PART_OF_PATH);
+
         render();
 
         return true;

@@ -25,13 +25,8 @@ void ColorMazeRenderer::renderPos(MazeCells& cells, Point currentPosition, Point
          colorIndex = MAZE_COLOR_WALL;
      }
 
-     //Just in case the resized and it's now going off-screen
-     int screenx, screeny;
-     getmaxyx(stdscr, screeny, screenx);
-     if (x < screenx && y < screeny) {
-         move(y,x);
-         attron(COLOR_PAIR(colorIndex));
-         addch(' ');
-         attroff(COLOR_PAIR(colorIndex));
-     }
+     move(y,x);
+     attron(COLOR_PAIR(colorIndex));
+     addch(' ');
+     attroff(COLOR_PAIR(colorIndex));
 }
