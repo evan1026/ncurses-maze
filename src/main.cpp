@@ -9,7 +9,7 @@
 
 //#include "docopt.c"
 
-#include "maze/Maze.h"
+#include "Maze.h"
 
 void resizeHandler(int);
 Maze* theMaze;

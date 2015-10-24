@@ -1,8 +1,8 @@
 #ifndef ASCII_MAZE_RENDERER_H
 #define ASCII_MAZE_RENDERER_H
 
-#include "maze/MazeCells.h"
-#include "rendering/MazeRenderer.h"
+#include "MazeCells.h"
+#include "MazeRenderer.h"
 
 //For when there are no better options
 class ASCIIMazeRenderer : public MazeRenderer {

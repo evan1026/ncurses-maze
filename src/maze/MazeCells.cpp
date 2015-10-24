@@ -1,8 +1,8 @@
 #include <sstream>
 
-#include "maze/MazeCells.h"
-#include "utils/IndexOutOfBoundsException.h"
-#include "utils/Point.h"
+#include "IndexOutOfBoundsException.h"
+#include "MazeCells.h"
+#include "Point.h"
 
 const Point MazeCells::left  = Point(-1,  0);
 const Point MazeCells::right = Point( 1,  0);

@@ -4,10 +4,10 @@
 #include <stack>
 #include <thread>
 
-#include "maze/Maze.h"
-#include "maze/MazeCells.h"
-#include "utils/Direction.h"
-#include "utils/Point.h"
+#include "Direction.h"
+#include "Maze.h"
+#include "MazeCells.h"
+#include "Point.h"
 
 void Maze::generate(bool animate, int animationDelay) {
 
