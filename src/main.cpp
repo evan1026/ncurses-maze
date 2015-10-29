@@ -47,7 +47,7 @@ int main(int argc, char* argv[]) {
         curs_set(0);
 
         /* Init maze */
-        //Maze maze((w.ws_col - 1) / 2, (w.ws_row - 1) / 2, false, 25);
+        //Maze maze((w.ws_col - 1) / 2, (w.ws_row - 1) / 2, true, 25);
         Maze maze(30, 15, false);
         theMaze = &maze;
         maze.render();

@@ -5,7 +5,7 @@
 
 class MazeRenderer {
     public:
-        virtual ~MazeRenderer() {};
+        virtual ~MazeRenderer() {}
 
         void render(MazeCells& cells, Point currentPosition, Point end);
         virtual void renderPos(MazeCells& cells, Point currentPosition, Point end, int x, int y) = 0;

@@ -5,9 +5,11 @@
 
 #include "ASCIIMazeRenderer.h"
 #include "ColorMazeRenderer.h"
+#include "DFSMazeGenerator.h"
 #include "Direction.h"
 #include "EASCIIMazeRenderer.h"
 #include "MazeCells.h"
+#include "MazeGenerator.h"
 #include "MazeRenderer.h"
 #include "Point.h"
 
@@ -17,7 +19,12 @@ class Maze{
     Point end;
     MazeRenderer* renderer;
 
-    void generate(bool animate, int animationDelay);
+    void generate(bool animate, int animationDelay) {
+        MazeGenerator* g = new DFSMazeGenerator();
+        g->generate(cells, renderer, animate, animationDelay);
+        delete g;
+    }
+
     Point getRandomUnvisitedDirection(Point p);
     bool tryMove(Point direction);
 
