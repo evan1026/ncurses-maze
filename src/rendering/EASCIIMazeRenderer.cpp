@@ -4,17 +4,19 @@
 #include "MazeCells.h"
 #include "Point.h"
 
-void EASCIIMazeRenderer::renderPos(MazeCells& cells, Point currentPosition, Point end, int x, int y) {
-    move(y,x);
+const EASCIIMazeRenderer* EASCIIMazeRenderer::instance = new EASCIIMazeRenderer();
+
+void EASCIIMazeRenderer::renderPos(WINDOW* win, MazeCells& cells, Point currentPosition, Point end, int x, int y) const {
+    wmove(win, y, x);
     if (Point(x,y) == currentPosition) {
-        addch('@');
+        waddch(win, '@');
     } else if (Point(x,y) == end) {
-        addch(ACS_CKBOARD);
+        waddch(win, ACS_CKBOARD);
     } else if (cells.getType(x,y) == MazeCell::Type::OPEN) {
         if (cells.getProperties(x,y) == MazeCell::Properties::PART_OF_PATH) {
-            addch('#');
+            waddch(win, '#');
         } else {
-            addch(' ');
+            waddch(win, ' ');
         }
     } else {
         MazeCell::Type up    = cells.upperNeighbor(x,y).type,
@@ -30,55 +32,55 @@ void EASCIIMazeRenderer::renderPos(MazeCells& cells, Point currentPosition, Poin
 
         switch (flags) {
             case 0b1111: //up & down & left & right
-                addch(ACS_PLUS);
+                waddch(win, ACS_PLUS);
                 break;
             case 0b1110: //down & left & right
-                addch(ACS_TTEE);
+                waddch(win, ACS_TTEE);
                 break;
             case 0b1101: //up & left & right
-                addch(ACS_BTEE);
+                waddch(win, ACS_BTEE);
                 break;
             case 0b1011: //up & down & right
-                addch(ACS_LTEE);
+                waddch(win, ACS_LTEE);
                 break;
             case 0b0111: //up & down & left
-                addch(ACS_RTEE);
+                waddch(win, ACS_RTEE);
                 break;
             case 0b1100: //left & right
-                addch(ACS_HLINE);
+                waddch(win, ACS_HLINE);
                 break;
             case 0b1010: //right & down
-                addch(ACS_ULCORNER);
+                waddch(win, ACS_ULCORNER);
                 break;
             case 0b1001: //right & up
-                addch(ACS_LLCORNER);
+                waddch(win, ACS_LLCORNER);
                 break;
             case 0b0110: //down & left
-                addch(ACS_URCORNER);
+                waddch(win, ACS_URCORNER);
                 break;
             case 0b0101: //up & left
-                addch(ACS_LRCORNER);
+                waddch(win, ACS_LRCORNER);
                 break;
             case 0b0011: //up & down
-                addch(ACS_VLINE);
+                waddch(win, ACS_VLINE);
                 break;
             case 0b1000: //right
-                addch(ACS_HLINE);
+                waddch(win, ACS_HLINE);
                 break;
             case 0b0100: //left
-                addch(ACS_HLINE);
+                waddch(win, ACS_HLINE);
                 break;
             case 0b0010: //down
-                addch(ACS_VLINE);
+                waddch(win, ACS_VLINE);
                 break;
             case 0b0001: //up
-                addch(ACS_VLINE);
+                waddch(win, ACS_VLINE);
                 break;
             case 0b0000: //none
-                addch('!'); //because it shouldn't happen
+                waddch(win, '!'); //because it shouldn't happen
                 break;
             default: //wut
-                addch('?'); //because it really shouldn't happen
+                waddch(win, '?'); //because it really shouldn't happen
                 break;
         }
     }

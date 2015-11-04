@@ -10,9 +10,13 @@
 //#include "docopt.c"
 
 #include "Maze.h"
+#include "Dimension.h"
+#include "ScrollView.h"
 
 void resizeHandler(int);
 Maze* theMaze;
+
+//TODO SERIOUS CLEANUP NEEDED
 
 int main(int argc, char* argv[]) {
 
@@ -26,7 +30,13 @@ int main(int argc, char* argv[]) {
     try{
 
         struct winsize w;
-        ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+        int result = ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+        /*if (result < 0) {
+            fprintf(stderr, "%s\n", explain_ioctl(STDOUT_FILENO, TIOCGWINSZ, &w));
+            exit(1);
+        }
+        std::cout << w.ws_col << std::endl;
+        std::cout << w.ws_row << std::endl;*/
 
         //if (2 * width + 1 > w.ws_col || 2 * height + 1 > w.ws_row) {
         //    std::cout << "Terminal not large enough for specified size" << std::endl;
@@ -41,13 +51,15 @@ int main(int argc, char* argv[]) {
         nodelay(stdscr, TRUE);
 
         /* Init signal handler */
-        signal(SIGWINCH, resizeHandler);
+        //signal(SIGWINCH, resizeHandler);
 
         /* Maze cursor invisible */
         curs_set(0);
 
         /* Init maze */
-        //Maze maze((w.ws_col - 1) / 2, (w.ws_row - 1) / 2, true, 25);
+        int width = (w.ws_col - 1) / 2 + 10;
+        int height = (w.ws_row - 1) / 2 + 10;
+        //Maze maze(width, height, false, 25);
         Maze maze(30, 15, false);
         theMaze = &maze;
         maze.render();

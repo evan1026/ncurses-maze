@@ -4,17 +4,19 @@
 #include "MazeCells.h"
 #include "Point.h"
 
-void ASCIIMazeRenderer::renderPos(MazeCells& cells, Point currentPosition, Point end, int x, int y) {
-    move(y,x);
+const ASCIIMazeRenderer* ASCIIMazeRenderer::instance = new ASCIIMazeRenderer();
+
+void ASCIIMazeRenderer::renderPos(WINDOW* win, MazeCells& cells, Point currentPosition, Point end, int x, int y) const {
+    wmove(win, y,x);
     if (Point(x,y) == currentPosition) {
-        addch('@');
+        waddch(win, '@');
     } else if (Point(x,y) == end) {
-        addch('#');
+        waddch(win, '#');
     } else if (cells.getType(x,y) == MazeCell::Type::OPEN) {
         if (cells.getProperties(x,y) == MazeCell::Properties::PART_OF_PATH) {
-            addch('%');
+            waddch(win, '%');
         } else {
-            addch(' ');
+            waddch(win, ' ');
         }
     } else {
         MazeCell::Type up    = cells.upperNeighbor(x,y).type,
@@ -38,23 +40,23 @@ void ASCIIMazeRenderer::renderPos(MazeCells& cells, Point currentPosition, Point
             case 0b1001:
             case 0b0110:
             case 0b0101:
-                addch('+');
+                waddch(win, '+');
                 break;
             case 0b0011:
             case 0b0010:
             case 0b0001:
-                addch('|');
+                waddch(win, '|');
                 break;
             case 0b1100:
             case 0b1000:
             case 0b0100:
-                addch('-');
+                waddch(win, '-');
                 break;
             case 0b0000: //none
-                addch('!'); //because it shouldn't happen
+                waddch(win, '!'); //because it shouldn't happen
                 break;
             default: //wut
-                addch('?'); //because it really shouldn't happen
+                waddch(win, '?'); //because it really shouldn't happen
                 break;
         }
     }

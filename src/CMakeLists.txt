@@ -6,4 +6,4 @@ set(SOURCES "${SOURCES} ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp" CACHE STRING "Sour
 add_subdirectory("maze")
 add_subdirectory("generation")
 add_subdirectory("rendering")
-
+add_subdirectory("components")

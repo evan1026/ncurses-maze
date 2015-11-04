@@ -1,55 +1,48 @@
 #ifndef MAZE_H
 #define MAZE_H
 
+#include <ncurses.h>
 #include <string>
 
 #include "ASCIIMazeRenderer.h"
 #include "ColorMazeRenderer.h"
 #include "DFSMazeGenerator.h"
+#include "Dimension.h"
 #include "Direction.h"
 #include "EASCIIMazeRenderer.h"
 #include "MazeCells.h"
 #include "MazeGenerator.h"
 #include "MazeRenderer.h"
 #include "Point.h"
+#include "ScrollView.h"
 
 class Maze{
     MazeCells cells;
     Point currentPosition;
     Point end;
-    MazeRenderer* renderer;
+    const MazeRenderer* renderer;
+    ScrollView viewport;
 
-    void generate(bool animate, int animationDelay) {
-        MazeGenerator* g = new DFSMazeGenerator();
-        g->generate(cells, renderer, animate, animationDelay);
-        delete g;
-    }
+    void generate(bool animate, int animationDelay);
 
     Point getRandomUnvisitedDirection(Point p);
     bool tryMove(Point direction);
 
+    static Dimension getScreenDimension() {
+        Dimension d;
+        getmaxyx(stdscr, d.height, d.width);
+        return d;
+    }
+
 public:
 
-    Maze (int w, int h, bool animate, int animationDelay) : cells(2 * w + 1, 2 * h + 1) {
-
-        if (has_colors()) {
-            renderer = new ColorMazeRenderer();
-        } else {
-            renderer = new EASCIIMazeRenderer(); //TODO see if ASCIIMazeRenderer is even needed
-        }
-
-        end = Point(cells.getWidth() - 2, cells.getHeight() - 2);
-        generate(animate, animationDelay);
-        currentPosition = Point(1,1);
-    }
+    Maze (int w, int h, bool animate, int animationDelay);
     Maze (int w, int h, bool animate) : Maze(w,h,animate,50) {}
     Maze (int w, int h) : Maze(w,h,false,0) {}
-    ~Maze() {
-        delete renderer;
-    }
 
     void render() {
-        renderer->render(cells, currentPosition, end);
+        renderer->render(viewport.getDrawWindow(), cells, currentPosition, end);
+        viewport.render();
     }
 
     bool win() {
@@ -57,10 +50,7 @@ public:
     }
 
     void setRenderer(MazeRenderer* r) {
-        if (r != renderer) {
-            delete renderer;
-            renderer = r;
-        }
+        renderer = r;
     }
 
     //Pointer to const so that they can't render themselves or mess with anything, that's for us only
@@ -73,10 +63,34 @@ public:
 
     Point getCurrentPosition() { return currentPosition; }
 
-    bool tryMoveUp()    { return tryMove(Direction::UP);    }
-    bool tryMoveDown()  { return tryMove(Direction::DOWN);  }
-    bool tryMoveLeft()  { return tryMove(Direction::LEFT);  }
-    bool tryMoveRight() { return tryMove(Direction::RIGHT); }
+    bool tryMoveUp() { 
+        if (tryMove(Direction::UP)) {
+            if (viewport.isVCenter(currentPosition + Point(0,2))) viewport.moveUp();
+            return true;
+        }
+        return false;
+    }
+    bool tryMoveDown() {
+        if (tryMove(Direction::DOWN)) {
+            if (viewport.isVCenter(currentPosition)) viewport.moveDown();
+            return true;
+        }
+        return false;
+    }
+    bool tryMoveLeft() {
+        if (tryMove(Direction::LEFT)) {
+            if (viewport.isHCenter(currentPosition + Point(2,0))) viewport.moveLeft();
+            return true;
+        }
+        return false;
+    }
+    bool tryMoveRight() {
+        if (tryMove(Direction::RIGHT)) {
+            if (viewport.isHCenter(currentPosition)) viewport.moveRight();
+            return true;
+        }
+        return false;
+    }
 };
 
 #endif

@@ -9,7 +9,7 @@
 #include "MazeCells.h"
 #include "Point.h"
 
-void DFSMazeGenerator::generate(MazeCells& m, MazeRenderer* r, bool animate, int animationDelay) {
+void DFSMazeGenerator::generate(MazeCells& m, WINDOW* win, const MazeRenderer* r, bool animate, int animationDelay) {
 
     Point end = Point(m.getWidth() - 2, m.getHeight() - 2);
     Point currentPosition = end;
@@ -33,7 +33,7 @@ void DFSMazeGenerator::generate(MazeCells& m, MazeRenderer* r, bool animate, int
 
         if (!pointStack.empty() && animate) {
             currentPosition = pointStack.top();
-            r->render(m, currentPosition, end);
+            r->render(win, m, currentPosition, end);
             std::this_thread::sleep_for(std::chrono::milliseconds(animationDelay));
         }
     }

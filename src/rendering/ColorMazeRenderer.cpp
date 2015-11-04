@@ -4,10 +4,15 @@
 #include "MazeCells.h"
 #include "Point.h"
 
-void ColorMazeRenderer::renderPos(MazeCells& cells, Point currentPosition, Point end, int x, int y) {
+const ColorMazeRenderer* ColorMazeRenderer::instance = new ColorMazeRenderer();
+bool ColorMazeRenderer::cursesInitState = false;
+
+void ColorMazeRenderer::renderPos(WINDOW* win, MazeCells& cells, Point currentPosition, Point end, int x, int y) const {
      //Default is -1 because I want it to crash while in development
      //We should never get there, so I want to know if we do
      int colorIndex = -1;
+
+     initCursesIfNotAlready();
 
      if (cells.getType(x,y) == MazeCell::Type::OPEN) {
          if (Point(x,y) == currentPosition) {
@@ -25,8 +30,8 @@ void ColorMazeRenderer::renderPos(MazeCells& cells, Point currentPosition, Point
          colorIndex = MAZE_COLOR_WALL;
      }
 
-     move(y,x);
-     attron(COLOR_PAIR(colorIndex));
-     addch(' ');
-     attroff(COLOR_PAIR(colorIndex));
+     wmove(win, y, x);
+     wattron(win, COLOR_PAIR(colorIndex));
+     waddch(win, ' ');
+     wattroff(win, COLOR_PAIR(colorIndex));
 }
