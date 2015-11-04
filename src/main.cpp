@@ -30,7 +30,7 @@ int main(int argc, char* argv[]) {
     try{
 
         struct winsize w;
-        int result = ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+        /*int result =*/ ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
         /*if (result < 0) {
             fprintf(stderr, "%s\n", explain_ioctl(STDOUT_FILENO, TIOCGWINSZ, &w));
             exit(1);
@@ -57,8 +57,8 @@ int main(int argc, char* argv[]) {
         curs_set(0);
 
         /* Init maze */
-        int width = (w.ws_col - 1) / 2 + 10;
-        int height = (w.ws_row - 1) / 2 + 10;
+        //int width = (w.ws_col - 1) / 2 + 10;
+        //int height = (w.ws_row - 1) / 2 + 10;
         //Maze maze(width, height, false, 25);
         Maze maze(30, 15, false);
         theMaze = &maze;
