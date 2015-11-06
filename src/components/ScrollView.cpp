@@ -18,7 +18,7 @@ void ScrollView::render() {
         ++starty;
         --width;
         --height;
-        box(window, 0, 0);
+        box(window, 0, 0); //TODO Draw my own box to correspond with the inner window better
     }
 
     for (int y = starty; y < height; ++y) {

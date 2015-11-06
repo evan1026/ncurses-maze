@@ -5,7 +5,7 @@
 
 class MazeRenderer {
     public:
-        void render(WINDOW* win, MazeCells& cells, Point currentPosition, Point end) const;
-        virtual void renderPos(WINDOW* win, MazeCells& cells, Point currentPosition, Point end, int x, int y) const = 0;
+        void render(WINDOW* win, MazeCells& cells, Point currentPosition, Point end);
+        virtual void renderPos(WINDOW* win, MazeCells& cells, Point currentPosition, Point end, int x, int y) = 0;
 };
 #endif

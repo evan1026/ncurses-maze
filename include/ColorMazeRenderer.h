@@ -25,7 +25,7 @@
 
 //The best looking renderer
 class ColorMazeRenderer : public MazeRenderer {
-    static const ColorMazeRenderer* instance;
+    static ColorMazeRenderer* instance;
     static bool cursesInitState;
     ColorMazeRenderer() {}
     static void initCursesIfNotAlready() {
@@ -42,8 +42,8 @@ class ColorMazeRenderer : public MazeRenderer {
         }
     }
     public:
-        void renderPos(WINDOW* win, MazeCells& cells, Point currentPosition, Point end, int x, int y) const;
-        static const ColorMazeRenderer* getInstance() {
+        void renderPos(WINDOW* win, MazeCells& cells, Point currentPosition, Point end, int x, int y);
+        static ColorMazeRenderer* getInstance() {
             return instance;
         }
 };

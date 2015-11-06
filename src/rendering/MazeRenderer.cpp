@@ -4,7 +4,7 @@
 #include "MazeCells.h"
 #include "Point.h"
 
-void MazeRenderer::render(WINDOW* win, MazeCells& cells, Point currentPosition, Point end) const {
+void MazeRenderer::render(WINDOW* win, MazeCells& cells, Point currentPosition, Point end) {
 
     werase(win);
 

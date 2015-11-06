@@ -4,10 +4,10 @@
 #include "MazeCells.h"
 #include "Point.h"
 
-const ColorMazeRenderer* ColorMazeRenderer::instance = new ColorMazeRenderer();
+ColorMazeRenderer* ColorMazeRenderer::instance = new ColorMazeRenderer();
 bool ColorMazeRenderer::cursesInitState = false;
 
-void ColorMazeRenderer::renderPos(WINDOW* win, MazeCells& cells, Point currentPosition, Point end, int x, int y) const {
+void ColorMazeRenderer::renderPos(WINDOW* win, MazeCells& cells, Point currentPosition, Point end, int x, int y) {
      //Default is -1 because I want it to crash while in development
      //We should never get there, so I want to know if we do
      int colorIndex = -1;

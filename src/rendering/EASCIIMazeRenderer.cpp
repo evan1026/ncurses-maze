@@ -4,9 +4,9 @@
 #include "MazeCells.h"
 #include "Point.h"
 
-const EASCIIMazeRenderer* EASCIIMazeRenderer::instance = new EASCIIMazeRenderer();
+EASCIIMazeRenderer* EASCIIMazeRenderer::instance = new EASCIIMazeRenderer();
 
-void EASCIIMazeRenderer::renderPos(WINDOW* win, MazeCells& cells, Point currentPosition, Point end, int x, int y) const {
+void EASCIIMazeRenderer::renderPos(WINDOW* win, MazeCells& cells, Point currentPosition, Point end, int x, int y) {
     wmove(win, y, x);
     if (Point(x,y) == currentPosition) {
         waddch(win, '@');
