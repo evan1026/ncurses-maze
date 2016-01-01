@@ -13,7 +13,7 @@ class DFSMazeGenerator : public MazeGenerator {
     Point getRandomUnvisitedDirection(Point p, MazeCells& cells);
 
     public:
-        void generate(MazeCells& m, WINDOW* win, const MazeRenderer* r, bool animate, int animationDelay);
+        void generate(MazeCells& m, std::function<void(Point)> renderFunction, bool animate, int animationDelay);
 };
 
 #endif

@@ -14,7 +14,7 @@
 #include "ScrollView.h"
 
 void resizeHandler(int);
-Maze* theMaze;
+Maze* globalMaze;
 
 //TODO SERIOUS CLEANUP NEEDED
 
@@ -50,8 +50,6 @@ int main(int argc, char* argv[]) {
         keypad(stdscr, TRUE);
         nodelay(stdscr, TRUE);
 
-        /* Init signal handler */
-        //signal(SIGWINCH, resizeHandler);
 
         /* Maze cursor invisible */
         curs_set(0);
@@ -60,9 +58,11 @@ int main(int argc, char* argv[]) {
         //int width = (w.ws_col - 1) / 2 + 10;
         //int height = (w.ws_row - 1) / 2 + 10;
         //Maze maze(width, height, false, 25);
-        Maze maze(30, 15, false);
-        theMaze = &maze;
-        maze.render();
+        Maze maze(25,25, false, 15);
+        globalMaze = &maze;
+
+        /* Init signal handler */
+        signal(SIGWINCH, resizeHandler);
 
         /* Loop on input */
         bool looping = true;
@@ -102,11 +102,8 @@ int main(int argc, char* argv[]) {
         endwin(); //The only reason I'm having an endwin in each section is I need to end curses before I print the exception details
         std::cout << e.what() << std::endl;
     } 
-
-
 }
 
 void resizeHandler(int sig) {
-    endwin();
-    theMaze->render();
+    globalMaze->handleSizeChanged();
 }

@@ -9,7 +9,7 @@
 class MazeGenerator {
     public:
         virtual ~MazeGenerator() {}
-        virtual void generate(MazeCells& m, WINDOW* win, const MazeRenderer* r, bool animate, int animationDelay) = 0;
+        virtual void generate(MazeCells& m, std::function<void(Point)> renderFunction, bool animate, int animationDelay) = 0;
 };
 
 #endif

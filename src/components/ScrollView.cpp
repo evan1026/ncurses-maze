@@ -4,13 +4,16 @@
 #include "Dimension.h"
 #include "ScrollView.h"
 
-ScrollView::ScrollView(Dimension out, int innerWidth, int innerHeight) : 
-        d(out), in_d(0, 0, innerWidth, innerHeight) {
+ScrollView::ScrollView(Dimension out, int innerWidth, int innerHeight, MazeRenderer* r) : 
+        d(out), in_d(0, 0, innerWidth, innerHeight), renderer(r) {
     window = newwin(d.height, d.width, d.y, d.x);
     innerWindow = newwin(in_d.height, in_d.width, in_d.y, in_d.x);
 }
 
-void ScrollView::render() {
+void ScrollView::render(MazeCells& m, Point currentPosition, Point end) {
+    renderer->render(innerWindow, m, currentPosition, end);
+    center(currentPosition);
+
     int startx = 0, starty = 0, width = d.width, height = d.height;
 
     if (needsBorder()) {
@@ -34,4 +37,37 @@ void ScrollView::render() {
     }
 
     wrefresh(window);
+}
+
+void ScrollView::center(Point position) {
+    int x = 0,
+        y = 0;
+
+    if (needsBorder()) {
+        x = position.x - (d.width - 2) / 2;
+        y = position.y - (d.height - 2) / 2;
+
+        move(10,50);
+        clrtoeol();
+        printw("Orignial x:  %d", x);
+        move(11, 50);
+        clrtoeol();
+        printw("Original y:  %d", y);
+
+        if (x > in_d.width - (d.width - 2)) x = in_d.width - (d.width - 2);
+        if (y > in_d.height - (d.height - 2)) y = in_d.height - (d.height - 2);
+
+        if (x < 0) x = 0;
+        if (y < 0) y = 0;
+        
+        move(12,50);
+        clrtoeol();
+        printw("Corrected x: %d", x);
+        move(13, 50);
+        clrtoeol();
+        printw("Corrected y: %d", y);
+    }
+
+    in_d.x = x;
+    in_d.y = y;
 }

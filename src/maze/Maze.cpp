@@ -10,12 +10,7 @@
 #include "Point.h"
 
 Maze::Maze(int w, int h, bool animate, int animationDelay) :
-        cells(2 * w + 1, 2 * h + 1), viewport(getScreenDimension(), 2 * w + 1, 2 * h + 1) {
-    if (has_colors()) {
-        renderer = ColorMazeRenderer::getInstance();
-    } else {
-        renderer = EASCIIMazeRenderer::getInstance(); //TODO see if ASCIIMazeRenderer is even needed
-    }
+        cells(2 * w + 1, 2 * h + 1), viewport(getScreenDimension(), 2 * w + 1, 2 * h + 1, getRenderer()) {
 
     end = Point(cells.getWidth() - 2, cells.getHeight() - 2);
     generate(animate, animationDelay);
@@ -23,8 +18,9 @@ Maze::Maze(int w, int h, bool animate, int animationDelay) :
 }
 
 void Maze::generate(bool animate, int animationDelay) {
+    std::function<void(Point)> f = std::bind(&Maze::renderp, this, std::placeholders::_1);
     MazeGenerator* g = new DFSMazeGenerator();
-    g->generate(cells, viewport.getDrawWindow(), renderer, animate, animationDelay);
+    g->generate(cells, f, animate, animationDelay);
     delete g;
 }
 

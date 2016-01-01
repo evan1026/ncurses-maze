@@ -8,8 +8,9 @@
 #include "Direction.h"
 #include "MazeCells.h"
 #include "Point.h"
+#include "ScrollView.h"
 
-void DFSMazeGenerator::generate(MazeCells& m, WINDOW* win, const MazeRenderer* r, bool animate, int animationDelay) {
+void DFSMazeGenerator::generate(MazeCells& m, std::function<void(Point)> renderFunction, bool animate, int animationDelay) {
 
     Point end = Point(m.getWidth() - 2, m.getHeight() - 2);
     Point currentPosition = end;
@@ -33,7 +34,7 @@ void DFSMazeGenerator::generate(MazeCells& m, WINDOW* win, const MazeRenderer* r
 
         if (!pointStack.empty() && animate) {
             currentPosition = pointStack.top();
-            r->render(win, m, currentPosition, end);
+            renderFunction(currentPosition);
             std::this_thread::sleep_for(std::chrono::milliseconds(animationDelay));
         }
     }
