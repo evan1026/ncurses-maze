@@ -2,8 +2,8 @@ cmake_minimum_required(VERSION 2.8)
 
 project(ncurses-maze)
 
-set(SOURCE_DIR "src")
-set(INCLUDE_DIR "include")
+set(SOURCE_DIR "new_src")
+set(INCLUDE_DIR "new_include")
 set(EXECUTABLE_NAME mazegame)
 
 #set(CMAKE_CXX_FLAGS "-O1 -std=c++11 -Wall ${CMAKE_CXX_FLAGS}")
