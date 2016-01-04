@@ -20,6 +20,12 @@ struct Point {
     inline Point operator-(const Point& p) const {
         return Point(x - p.x, y - p.y);
     }
+    inline Point operator*(const int& i) const {
+        return Point(x * i, y * i);
+    }
+    inline Point operator/(const int& i) const {
+        return Point(x / i, y / i);
+    }
     inline Point& operator=(const Point& p) {
         x = p.x;
         y = p.y;
@@ -39,14 +45,8 @@ struct Point {
     }
 };
 
-inline Point operator*(const Point& p, const int& i) {
-    return Point(p.x * i, p.y * i);
-}
 inline Point operator*(const int& i, const Point& p) {
     return p * i;
-}
-inline Point operator/(const Point& p, const int& i) {
-    return Point(p.x / i, p.y / i);
 }
 
 #endif

@@ -4,14 +4,14 @@
 #include "Dimension.h"
 #include "Point.h"
 
-ConsoleViewport::ConsoleViewport(Dimension d, int innerWidth, int innerHeight) : 
+ConsoleViewport::ConsoleViewport(Dimension d, int innerWidth, int innerHeight) :
                                      innerWindow(innerWidth, innerHeight),
                                      containerWindow(d.x, d.y, d.width, d.height) {}
 
 void ConsoleViewport::centerOn(Point p) {
     int x = 0,
         y = 0;
-        
+
     int innerWidth  = innerWindow.width,
         innerHeight = innerWindow.height,
         width       = containerWindow.width,
@@ -20,13 +20,13 @@ void ConsoleViewport::centerOn(Point p) {
     if (needsBorder()) {
         width = width - 2;
         height = height - 2;
-        
+
         x = width / 2 - p.x;
         y = height / 2 - p.y;
 
         if (x > 0)  x = 0;
         if (y > 0)  y = 0;
-        
+
         if (innerWidth > width   && x < width - innerWidth)     x = width - innerWidth;
         if (innerHeight > height && y < height - innerHeight)   y = height - innerHeight;
     }
@@ -69,7 +69,7 @@ void ConsoleViewport::refresh() {
         height -= 2;
         containerWindow.drawBox();
     }
-    
+
     for (int x = 0; x < width; ++x) {
         for (int y = 0; y < height; ++y) {
             int innerX = x - innerWindowX;

@@ -12,7 +12,7 @@
 
 Game::Game(RenderType rt, int width, int height) : maze(width, height) {
     if (rt == RenderType::ConsoleRender) {
-        
+
         struct winsize w;
         ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
         /*int result = ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);   //Allows for explaination of errors, but that requires
@@ -29,7 +29,7 @@ Game::Game(RenderType rt, int width, int height) : maze(width, height) {
 }
 
 void Game::run() {
-    
+
     //TODO Input based on input type
     bool looping = true;
     while (looping) {

@@ -10,7 +10,7 @@
 class Game {
     std::unique_ptr<MazeRenderer> renderer;
     Maze maze;
-    
+
 public:
     Game(RenderType rt, int width, int height);
     void run();

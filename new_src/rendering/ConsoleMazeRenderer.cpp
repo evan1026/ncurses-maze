@@ -10,7 +10,7 @@
 
 ConsoleMazeRenderer::ConsoleMazeRenderer(int width, int height, int mazeWidth, int mazeHeight) :
                                                 window(Dimension(0, 0, width, height), mazeWidth, mazeHeight){
-    
+
     //Init ncurses
     initscr(); //Basic init
     cbreak(); //Don't wait for \n to put chars in buffer
@@ -22,7 +22,7 @@ ConsoleMazeRenderer::ConsoleMazeRenderer(int width, int height, int mazeWidth, i
     if (has_colors()) {
         color = true;
         start_color();
-        
+
         init_pair(MAZE_COLOR_EMPTY, COLOR_BLACK, COLOR_BLACK);
         init_pair(MAZE_COLOR_WALL,  COLOR_BLACK, COLOR_WHITE);
     }
@@ -47,7 +47,7 @@ void ConsoleMazeRenderer::render(Maze& maze) {
 void ConsoleMazeRenderer::renderCell(Maze& maze, int x, int y) {
     MazeCell cell = maze.get(x, y);
     chtype value = '['; //All random chars like this are to ease debugging
-    
+
     if (color) {
         value = ' ';
 
@@ -78,7 +78,7 @@ void ConsoleMazeRenderer::renderCell(Maze& maze, int x, int y) {
             value = '?';
         }
     }
-    
+
     window.set(x, y, value);
 }
 

@@ -16,7 +16,7 @@ public:
 
     ConsoleWindow(int x, int y, int width, int height);
     ~ConsoleWindow();
-    
+
     void set(int x, int y, chtype c);
     void set(Point p, chtype c);
     chtype get(int x, int y);

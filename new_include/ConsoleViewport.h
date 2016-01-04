@@ -13,15 +13,15 @@ class ConsoleViewport {
     ConsoleWindow containerWindow;
     int innerWindowX = 0,
         innerWindowY = 0;
-    
+
     bool needsBorder() {
-        return innerWindow.width > containerWindow.width || 
+        return innerWindow.width > containerWindow.width ||
                innerWindow.height > containerWindow.height;
     }
 
 public:
     ConsoleViewport(Dimension dimension, int innerWidth, int innerHeight);
-    
+
     void centerOn(Point position);
     void centerOn(int x, int y);
     void set(int x, int y, chtype c);

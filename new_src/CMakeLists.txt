@@ -6,3 +6,4 @@ set(SOURCES "${SOURCES} ${CURR_DIR}/main.cpp
                         ${CURR_DIR}/Maze.cpp" CACHE STRING "Sources for project" FORCE)
 
 add_subdirectory("rendering")
+add_subdirectory("generation")
