@@ -10,10 +10,13 @@
 class Game {
     std::unique_ptr<MazeRenderer> renderer;
     Maze maze;
+    bool won = false;
 
 public:
     Game(RenderType rt, int width, int height);
     void run();
+
+    bool win() { return won; }
 };
 
 #endif

@@ -35,8 +35,30 @@ void Game::run() {
     while (looping) {
         int ch = getch();
 
-        if (ch == KEY_ENTER || ch == '\n') {
+        switch(ch) {
+            case KEY_UP:
+                maze.moveUp();
+                break;
+            case KEY_DOWN:
+                maze.moveDown();
+                break;
+            case KEY_LEFT:
+                maze.moveLeft();
+                break;
+            case KEY_RIGHT:
+                maze.moveRight();
+                break;
+            case KEY_ENTER:
+            case '\n':
+                looping = false;
+                break;
+            default:
+                break;
+        }
+
+        if (maze.getCurrentPosition() == maze.end) {
             looping = false;
+            won = true;
         }
 
         renderer->render(maze);

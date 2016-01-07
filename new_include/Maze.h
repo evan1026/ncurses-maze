@@ -13,6 +13,9 @@ class Maze {
     MazeCell& getRef(int x, int y);
     MazeCell& getRef(Point p);
 
+    //p is a displacement, not an absolute position
+    bool move(Point p);
+
 public:
     const int width;
     const int height;
@@ -44,6 +47,11 @@ public:
     void setType(Point p, MazeCell::Type t);
     void setProperties(int x, int y, MazeCell::Properties pr);
     void setProperties(Point p, MazeCell::Properties pr);
+
+    bool moveUp();
+    bool moveDown();
+    bool moveLeft();
+    bool moveRight();
 
 private:
     std::vector< std::vector< MazeCell > > cells; //It's much easier to initialize if this is declared after width and height

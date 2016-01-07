@@ -5,8 +5,12 @@
 #include "Dimension.h"
 #include "Maze.h"
 
-#define MAZE_COLOR_EMPTY 0
-#define MAZE_COLOR_WALL  1
+#define MAZE_COLOR_EMPTY     0
+#define MAZE_COLOR_WALL      1
+#define MAZE_COLOR_PATH      2
+#define MAZE_COLOR_NOT_PATH  3
+#define MAZE_COLOR_END       4
+#define MAZE_COLOR_CURRENT   5
 
 ConsoleMazeRenderer::ConsoleMazeRenderer(int width, int height, int mazeWidth, int mazeHeight) :
                                                 window(Dimension(0, 0, width, height), mazeWidth, mazeHeight){
@@ -23,8 +27,12 @@ ConsoleMazeRenderer::ConsoleMazeRenderer(int width, int height, int mazeWidth, i
         color = true;
         start_color();
 
-        init_pair(MAZE_COLOR_EMPTY, COLOR_BLACK, COLOR_BLACK);
-        init_pair(MAZE_COLOR_WALL,  COLOR_BLACK, COLOR_WHITE);
+        init_pair(MAZE_COLOR_EMPTY,    COLOR_BLACK, COLOR_BLACK);
+        init_pair(MAZE_COLOR_WALL,     COLOR_BLACK, COLOR_WHITE);
+        init_pair(MAZE_COLOR_PATH,     COLOR_BLACK, COLOR_BLUE);
+        init_pair(MAZE_COLOR_NOT_PATH, COLOR_BLACK, COLOR_RED);
+        init_pair(MAZE_COLOR_END,      COLOR_BLACK, COLOR_MAGENTA);
+        init_pair(MAZE_COLOR_CURRENT,  COLOR_BLACK, COLOR_GREEN);
     }
 
     window.init();
@@ -35,7 +43,7 @@ ConsoleMazeRenderer::~ConsoleMazeRenderer() {
 }
 
 void ConsoleMazeRenderer::render(Maze& maze) {
-    window.centerOn(0,0); //TODO maze current position
+    window.centerOn(maze.getCurrentPosition());
     for (int i = 0; i < maze.width; ++i) {
         for (int j = 0; j < maze.height; ++j) {
             renderCell(maze, i, j);
@@ -51,31 +59,55 @@ void ConsoleMazeRenderer::renderCell(Maze& maze, int x, int y) {
     if (color) {
         value = ' ';
 
-        if (cell.type == MazeCell::Type::OPEN) {
-            value = value | COLOR_PAIR(MAZE_COLOR_EMPTY);
-        } else if (cell.type == MazeCell::Type::WALL) {
-            value = value | COLOR_PAIR(MAZE_COLOR_WALL);
+        if (maze.getCurrentPosition() == Point(x,y)) {
+            value = value | COLOR_PAIR(MAZE_COLOR_CURRENT);
+        } else if (maze.end == Point(x,y)) {
+            value = value | COLOR_PAIR(MAZE_COLOR_END);
         } else {
-            value = '?';
+            if (cell.type == MazeCell::Type::OPEN) {
+                if (cell.properties == MazeCell::Properties::PART_OF_PATH) {
+                    value = value | COLOR_PAIR(MAZE_COLOR_PATH);
+                } else if (cell.properties == MazeCell::Properties::NOT_PART_OF_PATH) {
+                    value = value | COLOR_PAIR(MAZE_COLOR_NOT_PATH);
+                } else {
+                    value = value | COLOR_PAIR(MAZE_COLOR_EMPTY);
+                }
+            } else if (cell.type == MazeCell::Type::WALL) {
+                value = value | COLOR_PAIR(MAZE_COLOR_WALL);
+            } else {
+                value = '?';
+            }
         }
     } else {
-        if (cell.type == MazeCell::Type::OPEN) {
-            value = ' ';
-        } else if (cell.type == MazeCell::Type::WALL) {
-            MazeCell::Type up    = maze.getUpperNeighbor(x, y).type,
-                           down  = maze.getLowerNeighbor(x, y).type,
-                           left  = maze.getLeftNeighbor (x, y).type,
-                           right = maze.getRightNeighbor(x, y).type;
-
-            unsigned char flags = 0;
-            if (up    == MazeCell::Type::WALL) flags |= 0b0001;
-            if (down  == MazeCell::Type::WALL) flags |= 0b0010;
-            if (left  == MazeCell::Type::WALL) flags |= 0b0100;
-            if (right == MazeCell::Type::WALL) flags |= 0b1000;
-
-            value = getASCIIFromFlags(flags);
+        if (maze.getCurrentPosition() == Point(x,y)) {
+            value = '@';
+        } else if (maze.end == Point(x,y)) {
+            value = ACS_CKBOARD;
         } else {
-            value = '?';
+            if (cell.type == MazeCell::Type::OPEN) {
+                if (cell.properties == MazeCell::Properties::PART_OF_PATH) {
+                    value = '#';
+                } else if (cell.properties == MazeCell::Properties::NOT_PART_OF_PATH) {
+                    value = '~';
+                } else {
+                    value = ' ';
+                }
+            } else if (cell.type == MazeCell::Type::WALL) {
+                MazeCell::Type up    = maze.getUpperNeighbor(x, y).type,
+                               down  = maze.getLowerNeighbor(x, y).type,
+                               left  = maze.getLeftNeighbor (x, y).type,
+                               right = maze.getRightNeighbor(x, y).type;
+
+                unsigned char flags = 0;
+                if (up    == MazeCell::Type::WALL) flags |= 0b0001;
+                if (down  == MazeCell::Type::WALL) flags |= 0b0010;
+                if (left  == MazeCell::Type::WALL) flags |= 0b0100;
+                if (right == MazeCell::Type::WALL) flags |= 0b1000;
+
+                value = getASCIIFromFlags(flags);
+            } else {
+                value = '?';
+            }
         }
     }
 

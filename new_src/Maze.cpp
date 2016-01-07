@@ -12,6 +12,7 @@ Maze::Maze(int _width, int _height, MazeGeneratorType g) : width(2 * _width + 1)
                start(1, 1), end(width - 2, height - 2), cells(height, std::vector< MazeCell > (width, MazeCell())),
                currentPosition(start) {
     generate(g);
+    setProperties(start, MazeCell::Properties::PART_OF_PATH);
 }
 
 Maze::Maze(int width, int height) : Maze(width, height, MazeGeneratorType::DFS) {}
@@ -121,4 +122,33 @@ void Maze::setProperties(int x, int y, MazeCell::Properties pr) {
 
 void Maze::setProperties(Point p, MazeCell::Properties pr) {
     setProperties(p.x, p.y, pr);
+}
+
+bool Maze::move(Point p) {
+    MazeCell cell = get(currentPosition + p);
+    if (cell.type == MazeCell::Type::OPEN) {
+        if (cell.properties == MazeCell::Properties::PART_OF_PATH) {
+            setProperties(currentPosition, MazeCell::Properties::NOT_PART_OF_PATH);
+        }
+        currentPosition += p;
+        setProperties(currentPosition, MazeCell::Properties::PART_OF_PATH);
+        return true;
+    }
+    return false;
+}
+
+bool Maze::moveUp() {
+    return move(Point(0,-1));
+}
+
+bool Maze::moveDown() {
+    return move(Point(0,1));
+}
+
+bool Maze::moveLeft() {
+    return move(Point(-1,0));
+}
+
+bool Maze::moveRight() {
+    return move(Point(1,0));
 }

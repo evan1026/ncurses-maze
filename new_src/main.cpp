@@ -13,9 +13,20 @@ struct Args {
 Args processArgs(int argc, char* argv[]);
 
 int main(int argc, char* argv[]) {
-    Args a = processArgs(argc, argv);
-    Game game(RenderType::ConsoleRender, a.width, a.height);
-    game.run();
+    bool win;
+
+    {
+        Args a = processArgs(argc, argv);
+        Game game(RenderType::ConsoleRender, a.width, a.height);
+        game.run();
+        win = game.win();
+    }
+
+    if (win) {
+        std::cout << "You win!" << std::endl;
+    } else {
+        std::cout << "Quitter!" << std::endl;
+    }
 }
 
 Args processArgs(int argc, char* argv[]) {
