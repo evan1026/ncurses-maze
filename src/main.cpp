@@ -1,109 +1,56 @@
-#include <cctype>
-#include <chrono>
 #include <iostream>
-#include <ncurses.h>
-#include <signal.h>
-#include <sys/ioctl.h>
-#include <thread>
-#include <unistd.h>
+#include <cstdlib>
 
-//#include "docopt.c"
+#include "Game.h"
+#include "RenderType.h"
 
-#include "Maze.h"
-#include "Dimension.h"
-#include "ScrollView.h"
+struct Args {
+    const int width;
+    const int height;
+    Args(int w, int h) : width(w), height(h) {}
+};
 
-void resizeHandler(int);
-Maze* globalMaze;
-
-//TODO SERIOUS CLEANUP NEEDED
+Args processArgs(int argc, char* argv[]);
 
 int main(int argc, char* argv[]) {
+    bool win;
 
-    /* Easy command parsing with docopt.c. Too bad it's only a WIP and can't do anything but options (-h, --version, etc.)*/
-    //DocoptArgs args = docopt(argc, argv, /* help */ 1, /* version */ "0.0.1");
+    {
+        Args a = processArgs(argc, argv);
+        Game game(RenderType::ConsoleRender, a.width, a.height);
+        game.run();
+        win = game.win();
+    }
 
-    //Stand-ins until docopt starts working or I become crazy/desperate enough to parse arguments myself.
-    //int width = 78,
-    //    height = 26;
-
-    try{
-
-        struct winsize w;
-        /*int result =*/ ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
-        /*if (result < 0) {
-            fprintf(stderr, "%s\n", explain_ioctl(STDOUT_FILENO, TIOCGWINSZ, &w));
-            exit(1);
-        }
-        std::cout << w.ws_col << std::endl;
-        std::cout << w.ws_row << std::endl;*/
-
-        //if (2 * width + 1 > w.ws_col || 2 * height + 1 > w.ws_row) {
-        //    std::cout << "Terminal not large enough for specified size" << std::endl;
-        //    return 1;
-        //}
-
-        /* Init ncurses window */
-        initscr();
-        cbreak();
-        noecho();
-        keypad(stdscr, TRUE);
-        nodelay(stdscr, TRUE);
-
-
-        /* Maze cursor invisible */
-        curs_set(0);
-
-        /* Init maze */
-        //int width = (w.ws_col - 1) / 2 + 10;
-        //int height = (w.ws_row - 1) / 2 + 10;
-        //Maze maze(width, height, false, 25);
-        Maze maze(25,25, false, 15);
-        globalMaze = &maze;
-
-        /* Init signal handler */
-        signal(SIGWINCH, resizeHandler);
-
-        /* Loop on input */
-        bool looping = true;
-        while (looping) {
-            int ch = getch();
-
-            switch (ch) {
-                case KEY_UP:
-                    maze.tryMoveUp();
-                    break;
-                case KEY_DOWN:
-                    maze.tryMoveDown();
-                    break;
-                case KEY_LEFT:
-                    maze.tryMoveLeft();
-                    break;
-                case KEY_RIGHT:
-                    maze.tryMoveRight();
-                    break;
-                default:
-                    maze.render();
-                    break;
-            }
-
-            if (ch == KEY_ENTER || ch == '\n' || maze.win()) {
-                looping = false;
-            }
-
-            std::this_thread::sleep_for(std::chrono::milliseconds(33)); //33 ms ~ 30 fps
-        }
-        
-        /* Cleanup */
-        endwin();
-        if (maze.win()) std::cout << "YOU WIN" << std::endl;
-
-    } catch (std::exception& e) {
-        endwin(); //The only reason I'm having an endwin in each section is I need to end curses before I print the exception details
-        std::cout << e.what() << std::endl;
-    } 
+    if (win) {
+        std::cout << "You win!" << std::endl;
+    } else {
+        std::cout << "Quitter!" << std::endl;
+    }
 }
 
-void resizeHandler(int sig) {
-    globalMaze->handleSizeChanged();
+Args processArgs(int argc, char* argv[]) {
+    int width, height;
+
+    if (argc != 3) {
+        std::cout << "Usage: " << argv[0] << " <width> <height>" << std::endl;
+        exit(1);
+    }
+
+    char* p; //Used to see if there are trailing characters in the strtol call, which will leave the pointer at the
+    char* q; // char after the last one used to make the number. If this is not the end of the string (\0), there's an issue
+    width = strtol(argv[1], &p, 10);
+    height = strtol(argv[2], &q, 10);
+
+    if (*p != 0 || width <= 0) {
+        std::cout << "Invalid width: \"" << argv[1] << "\"." << std::endl;
+        exit(1);
+    }
+
+    if (*q != 0 || height <= 0) {
+        std::cout << "Invalid height: \"" << argv[2] << "\"." << std::endl;
+        exit(1);
+    }
+
+    return Args(width, height);
 }

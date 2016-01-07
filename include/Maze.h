@@ -1,94 +1,61 @@
 #ifndef MAZE_H
 #define MAZE_H
 
-#include <ncurses.h>
-#include <string>
+#include <vector>
 
-#include "ASCIIMazeRenderer.h"
-#include "ColorMazeRenderer.h"
-#include "DFSMazeGenerator.h"
-#include "Dimension.h"
-#include "Direction.h"
-#include "EASCIIMazeRenderer.h"
-#include "MazeCells.h"
-#include "MazeGenerator.h"
-#include "MazeRenderer.h"
+#include "MazeCell.h"
+#include "MazeGeneratorType.h"
 #include "Point.h"
-#include "ScrollView.h"
 
-class Maze{
-    MazeCells cells;
-    Point currentPosition;
-    Point end;
-    ScrollView viewport;
+class Maze {
+    void initGrid();
 
-    void generate(bool animate, int animationDelay);
+    MazeCell& getRef(int x, int y);
+    MazeCell& getRef(Point p);
 
-    Point getRandomUnvisitedDirection(Point p);
-    bool tryMove(Point direction);
-
-    static Dimension getScreenDimension() {
-        Dimension d(0,0,20,20);
-        //getmaxyx(stdscr, d.height, d.width);
-        return d;
-    }
-
-    static MazeRenderer* getRenderer() {
-        if (has_colors()) {
-            return ColorMazeRenderer::getInstance();
-        } else {
-            return EASCIIMazeRenderer::getInstance(); //TODO see if ASCIIMazeRenderer is even needed
-        }
-    }
+    //p is a displacement, not an absolute position
+    bool move(Point p);
 
 public:
+    const int width;
+    const int height;
 
-    Maze (int w, int h, bool animate, int animationDelay);
-    Maze (int w, int h, bool animate) : Maze(w,h,animate,50) {}
-    Maze (int w, int h) : Maze(w,h,false,0) {}
+    const Point start;
+    const Point end;
 
-    void render() {
-        viewport.render(cells, currentPosition, end);
-    }
+    Maze(int width, int height);
+    Maze(int width, int height, MazeGeneratorType g);
+    void generate(MazeGeneratorType g);
+    MazeCell get(int x, int y);
+    MazeCell get(Point p);
 
-    void renderp(Point position) {
-        currentPosition = position;
-        render();
-    }
+    MazeCell getUpperNeighbor(int x, int y);
+    MazeCell getUpperNeighbor(Point p);
+    MazeCell getLowerNeighbor(int x, int y);
+    MazeCell getLowerNeighbor(Point p);
+    MazeCell getRightNeighbor(int x, int y);
+    MazeCell getRightNeighbor(Point p);
+    MazeCell getLeftNeighbor(int x, int y);
+    MazeCell getLeftNeighbor(Point p);
 
-    bool win() {
-        return end == currentPosition;
-    }
+    bool isUnconnected(Point p);
+    bool isUnconnected(int x, int y);
 
-    Point getCurrentPosition() { return currentPosition; }
+    Point getCurrentPosition();
 
-    bool tryMoveUp() { 
-        return tryMove(Direction::UP);
-    }
-    bool tryMoveDown() {
-        return tryMove(Direction::DOWN);
-    }
-    bool tryMoveLeft() {
-        return tryMove(Direction::LEFT);
-    }
-    bool tryMoveRight() {
-        return tryMove(Direction::RIGHT);
-    }
+    void setType(int x, int y, MazeCell::Type t);
+    void setType(Point p, MazeCell::Type t);
+    void setProperties(int x, int y, MazeCell::Properties pr);
+    void setProperties(Point p, MazeCell::Properties pr);
 
-    void adjustViewport(int width, int height) {
-        viewport.resize(width, height);
-    }
+    bool moveUp();
+    bool moveDown();
+    bool moveLeft();
+    bool moveRight();
 
-    void handleSizeChanged() {
-        endwin();
-        refresh();
-        clear();
-
-        Point p;
-        getmaxyx(stdscr, p.y, p.x);
-        adjustViewport(p.x, p.y);
-        render();
-    }
+private:
+    std::vector< std::vector< MazeCell > > cells; //It's much easier to initialize if this is declared after width and height
+    Point currentPosition;
 };
 
 #endif
