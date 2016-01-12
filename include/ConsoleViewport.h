@@ -1,8 +1,8 @@
 #ifndef CONSOLE_VIEWPORT_H
 #define CONSOLE_VIEWPORT_H
 
-#include <ncurses.h>
 #include <memory>
+#include <ncurses.h>
 
 #include "ConsoleWindow.h"
 #include "Dimension.h"
