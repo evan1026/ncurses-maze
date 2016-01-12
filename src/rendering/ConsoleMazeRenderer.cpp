@@ -1,4 +1,6 @@
 #include <ncurses.h>
+#include <sys/ioctl.h>
+#include <unistd.h>
 
 #include "ConsoleMazeRenderer.h"
 #include "ConsoleViewport.h"
@@ -12,8 +14,8 @@
 #define MAZE_COLOR_END       4
 #define MAZE_COLOR_CURRENT   5
 
-ConsoleMazeRenderer::ConsoleMazeRenderer(int width, int height, int mazeWidth, int mazeHeight) :
-                                                window(Dimension(0, 0, width, height), mazeWidth, mazeHeight){
+ConsoleMazeRenderer::ConsoleMazeRenderer(int _mazeWidth, int _mazeHeight) :
+                window(getWindowDimension(), _mazeWidth, _mazeHeight) {
 
     //Init ncurses
     initscr(); //Basic init
@@ -38,8 +40,25 @@ ConsoleMazeRenderer::ConsoleMazeRenderer(int width, int height, int mazeWidth, i
     window.init();
 }
 
+Dimension ConsoleMazeRenderer::getWindowDimension() {
+    struct winsize w;
+    ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+
+    return Dimension(0, 0, w.ws_col, w.ws_row);
+}
+
 ConsoleMazeRenderer::~ConsoleMazeRenderer() {
     endwin(); //ncurses cleanup
+}
+
+void ConsoleMazeRenderer::handleResize() {
+    clear();
+
+    int width,
+        height;
+
+    getmaxyx(stdscr, height, width);
+    window.resize(Dimension(0, 0, width, height));
 }
 
 void ConsoleMazeRenderer::render(Maze& maze) {

@@ -13,10 +13,12 @@ class ConsoleMazeRenderer : public MazeRenderer {
 
     void renderCell(Maze& maze, int x, int y);
     chtype getASCIIFromFlags(unsigned char flags);
+    Dimension getWindowDimension();
 public:
-    ConsoleMazeRenderer(int width, int height, int mazeWidth, int mazeHeight);
+    ConsoleMazeRenderer(int mazeWidth, int mazeHeight);
     ~ConsoleMazeRenderer();
     void render(Maze& maze);
+    void handleResize();
 };
 
 #endif

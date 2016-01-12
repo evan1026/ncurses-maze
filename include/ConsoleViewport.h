@@ -2,6 +2,7 @@
 #define CONSOLE_VIEWPORT_H
 
 #include <ncurses.h>
+#include <memory>
 
 #include "ConsoleWindow.h"
 #include "Dimension.h"
@@ -9,14 +10,14 @@
 #include "PseudoConsoleWindow.h"
 
 class ConsoleViewport {
-    PseudoConsoleWindow innerWindow;
-    ConsoleWindow containerWindow;
+    std::unique_ptr<PseudoConsoleWindow> innerWindow;
+    std::unique_ptr<ConsoleWindow> containerWindow;
     int innerWindowX = 0,
         innerWindowY = 0;
 
     bool needsBorder() {
-        return innerWindow.width > containerWindow.width ||
-               innerWindow.height > containerWindow.height;
+        return innerWindow->width > containerWindow->width ||
+               innerWindow->height > containerWindow->height;
     }
 
 public:
@@ -30,6 +31,7 @@ public:
     chtype get(Point p);
     void refresh();
     void init();
+    void resize(Dimension dimension);
 };
 
 #endif

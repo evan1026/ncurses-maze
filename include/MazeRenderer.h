@@ -6,6 +6,7 @@
 class MazeRenderer {
 public:
     virtual void render(Maze& maze) = 0;
+    virtual void handleResize() = 0;
     virtual ~MazeRenderer() {}
 };
 #endif

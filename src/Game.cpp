@@ -1,9 +1,7 @@
 #include <chrono>
 #include <iostream>
 #include <memory>
-#include <sys/ioctl.h>
 #include <thread>
-#include <unistd.h>
 
 #include "ConsoleMazeRenderer.h"
 #include "Game.h"
@@ -12,16 +10,7 @@
 
 Game::Game(RenderType rt, int width, int height) : maze(width, height) {
     if (rt == RenderType::ConsoleRender) {
-
-        struct winsize w;
-        ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
-        /*int result = ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);   //Allows for explaination of errors, but that requires
-        if (result < 0) {                                      //More libraries, so I'm leaving it out unless needed
-            fprintf(stderr, "%s\n", explain_ioctl(STDOUT_FILENO, TIOCGWINSZ, &w));
-            exit(1);
-        }*/
-
-        renderer = std::unique_ptr<MazeRenderer>(new ConsoleMazeRenderer(w.ws_col, w.ws_row, maze.width, maze.height));
+        renderer = std::unique_ptr<MazeRenderer>(new ConsoleMazeRenderer(maze.width, maze.height));
     } else {
         std::cerr << "RenderType not recognized in Game.cpp line " << __LINE__ << std::endl;
         renderer = std::unique_ptr<MazeRenderer>(nullptr); //Not ideal, but we shouldn't be here anyway
@@ -51,6 +40,9 @@ void Game::run() {
             case KEY_ENTER:
             case '\n':
                 looping = false;
+                break;
+            case KEY_RESIZE:
+                renderer->handleResize();
                 break;
             default:
                 break;
