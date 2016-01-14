@@ -5,17 +5,16 @@
 #include "Point.h"
 
 ConsoleViewport::ConsoleViewport(Dimension d, int innerWidth, int innerHeight) :
-                                     innerWindow(new PseudoConsoleWindow(innerWidth, innerHeight)),
-                                     containerWindow(new ConsoleWindow(d.x, d.y, d.width, d.height)) {}
+            innerWindow(innerWidth, innerHeight), containerWindow(d.x, d.y, d.width, d.height) {}
 
 void ConsoleViewport::centerOn(Point p) {
     int x = 0,
         y = 0;
 
-    int innerWidth  = innerWindow->getWidth(),
-        innerHeight = innerWindow->getHeight(),
-        width       = containerWindow->getWidth(),
-        height      = containerWindow->getHeight();
+    int innerWidth  = innerWindow.getWidth(),
+        innerHeight = innerWindow.getHeight(),
+        width       = containerWindow.getWidth(),
+        height      = containerWindow.getHeight();
 
     if (needsBorder()) {
         width = width - 2;
@@ -40,7 +39,7 @@ void ConsoleViewport::centerOn(int x, int y) {
 }
 
 void ConsoleViewport::set(int x, int y, chtype c) {
-    innerWindow->set(x, y, c);
+    innerWindow.set(x, y, c);
 }
 
 void ConsoleViewport::set(Point p, chtype c) {
@@ -48,7 +47,7 @@ void ConsoleViewport::set(Point p, chtype c) {
 }
 
 chtype ConsoleViewport::get(int x, int y) {
-    return innerWindow->get(x, y);
+    return innerWindow.get(x, y);
 }
 
 chtype ConsoleViewport::get(Point p) {
@@ -58,16 +57,15 @@ chtype ConsoleViewport::get(Point p) {
 void ConsoleViewport::refresh() {
     int startx = 0,
         starty = 0,
-        width = containerWindow->getWidth(),
-        height = containerWindow->getHeight();
-
+        width = containerWindow.getWidth(),
+        height = containerWindow.getHeight();
 
     if (needsBorder()) {
         ++startx;
         ++starty;
         width -= 2;
         height -= 2;
-        containerWindow->drawBox();
+        containerWindow.drawBox();
     }
 
     for (int x = 0; x < width; ++x) {
@@ -75,16 +73,16 @@ void ConsoleViewport::refresh() {
             int innerX = x - innerWindowX;
             int innerY = y - innerWindowY;
 
-            if (innerX >= 0 && innerX < innerWindow->getWidth() && innerY >= 0 && innerY < innerWindow->getHeight()) {
-                containerWindow->set(x + startx, y + starty, innerWindow->get(innerX, innerY));
+            if (innerX >= 0 && innerX < innerWindow.getWidth() && innerY >= 0 && innerY < innerWindow.getHeight()) {
+                containerWindow.set(x + startx, y + starty, innerWindow.get(innerX, innerY));
             } else {
-                containerWindow->set(x + startx, y + starty, '!');
+                containerWindow.set(x + startx, y + starty, '!');
             }
         }
     }
-    containerWindow->refresh();
+    containerWindow.refresh();
 }
 
 void ConsoleViewport::resize(Dimension d) {
-    containerWindow = std::unique_ptr<ConsoleWindow>(new ConsoleWindow(d.x, d.y, d.width, d.height));
+    containerWindow = ConsoleWindow(d.x, d.y, d.width, d.height);
 }

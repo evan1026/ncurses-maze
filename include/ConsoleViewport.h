@@ -1,7 +1,6 @@
 #ifndef CONSOLE_VIEWPORT_H
 #define CONSOLE_VIEWPORT_H
 
-#include <memory>
 #include <ncurses.h>
 
 #include "ConsoleWindow.h"
@@ -10,14 +9,14 @@
 #include "PseudoConsoleWindow.h"
 
 class ConsoleViewport {
-    std::unique_ptr<PseudoConsoleWindow> innerWindow; //TODO check if ptr still needed
-    std::unique_ptr<ConsoleWindow> containerWindow;
+    PseudoConsoleWindow innerWindow;
+    ConsoleWindow containerWindow;
     int innerWindowX = 0,
         innerWindowY = 0;
 
     bool needsBorder() {
-        return innerWindow->getWidth() > containerWindow->getWidth() ||
-               innerWindow->getHeight() > containerWindow->getHeight();
+        return innerWindow.getWidth() > containerWindow.getWidth() ||
+               innerWindow.getHeight() > containerWindow.getHeight();
     }
 
 public:
