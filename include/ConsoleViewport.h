@@ -10,7 +10,7 @@
 #include "PseudoConsoleWindow.h"
 
 class ConsoleViewport {
-    std::unique_ptr<PseudoConsoleWindow> innerWindow;
+    std::unique_ptr<PseudoConsoleWindow> innerWindow; //TODO check if ptr still needed
     std::unique_ptr<ConsoleWindow> containerWindow;
     int innerWindowX = 0,
         innerWindowY = 0;
