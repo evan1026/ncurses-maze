@@ -4,6 +4,7 @@
 
 #include "ConsoleMazeRenderer.h"
 #include "ConsoleViewport.h"
+#include "CursesInstance.h"
 #include "Dimension.h"
 #include "Maze.h"
 
@@ -15,29 +16,14 @@
 #define MAZE_COLOR_CURRENT   5
 
 ConsoleMazeRenderer::ConsoleMazeRenderer(int _mazeWidth, int _mazeHeight) :
-                window(getWindowDimension(), _mazeWidth, _mazeHeight) {
+                window(getWindowDimension(), _mazeWidth, _mazeHeight), curses() {
 
-    //Init ncurses
-    initscr(); //Basic init
-    cbreak(); //Don't wait for \n to put chars in buffer
-    noecho(); //Don't print typed characters to the screen
-    keypad(stdscr, TRUE); //Enables reading special characters like F1, F2, ..., arrow keys, etc.
-    nodelay(stdscr, TRUE); //Makes getch non-blocking
-    curs_set(0); //Makes cursor invisible
-
-    if (has_colors()) {
-        color = true;
-        start_color();
-
-        init_pair(MAZE_COLOR_EMPTY,    COLOR_BLACK, COLOR_BLACK);
-        init_pair(MAZE_COLOR_WALL,     COLOR_BLACK, COLOR_WHITE);
-        init_pair(MAZE_COLOR_PATH,     COLOR_BLACK, COLOR_BLUE);
-        init_pair(MAZE_COLOR_NOT_PATH, COLOR_BLACK, COLOR_RED);
-        init_pair(MAZE_COLOR_END,      COLOR_BLACK, COLOR_MAGENTA);
-        init_pair(MAZE_COLOR_CURRENT,  COLOR_BLACK, COLOR_GREEN);
-    }
-
-    window.init();
+    curses.initColorPair(MAZE_COLOR_EMPTY,    COLOR_BLACK, COLOR_BLACK);
+    curses.initColorPair(MAZE_COLOR_WALL,     COLOR_BLACK, COLOR_WHITE);
+    curses.initColorPair(MAZE_COLOR_PATH,     COLOR_BLACK, COLOR_BLUE);
+    curses.initColorPair(MAZE_COLOR_NOT_PATH, COLOR_BLACK, COLOR_RED);
+    curses.initColorPair(MAZE_COLOR_END,      COLOR_BLACK, COLOR_MAGENTA);
+    curses.initColorPair(MAZE_COLOR_CURRENT,  COLOR_BLACK, COLOR_GREEN);
 }
 
 Dimension ConsoleMazeRenderer::getWindowDimension() {
@@ -47,17 +33,11 @@ Dimension ConsoleMazeRenderer::getWindowDimension() {
     return Dimension(0, 0, w.ws_col, w.ws_row);
 }
 
-ConsoleMazeRenderer::~ConsoleMazeRenderer() {
-    endwin(); //ncurses cleanup
-}
-
 void ConsoleMazeRenderer::handleResize() {
-    clear();
+    curses.handleResize();
 
-    int width,
-        height;
-
-    getmaxyx(stdscr, height, width);
+    int width = curses.getWidth();
+    int height = curses.getHeight();
     window.resize(Dimension(0, 0, width, height));
 }
 
@@ -75,24 +55,24 @@ void ConsoleMazeRenderer::renderCell(Maze& maze, int x, int y) {
     MazeCell cell = maze.get(x, y);
     chtype value = '['; //All random chars like this are to ease debugging
 
-    if (color) {
+    if (curses.hasColor()) {
         value = ' ';
 
         if (maze.getCurrentPosition() == Point(x,y)) {
-            value = value | COLOR_PAIR(MAZE_COLOR_CURRENT);
+            value = curses.applyColorPair(MAZE_COLOR_CURRENT, value);
         } else if (maze.end == Point(x,y)) {
-            value = value | COLOR_PAIR(MAZE_COLOR_END);
+            value = curses.applyColorPair(MAZE_COLOR_END, value);
         } else {
             if (cell.type == MazeCell::Type::OPEN) {
                 if (cell.properties == MazeCell::Properties::PART_OF_PATH) {
-                    value = value | COLOR_PAIR(MAZE_COLOR_PATH);
+                    value = curses.applyColorPair(MAZE_COLOR_PATH, value);
                 } else if (cell.properties == MazeCell::Properties::NOT_PART_OF_PATH) {
-                    value = value | COLOR_PAIR(MAZE_COLOR_NOT_PATH);
+                    value = curses.applyColorPair(MAZE_COLOR_NOT_PATH, value);
                 } else {
-                    value = value | COLOR_PAIR(MAZE_COLOR_EMPTY);
+                    value = curses.applyColorPair(MAZE_COLOR_EMPTY, value);
                 }
             } else if (cell.type == MazeCell::Type::WALL) {
-                value = value | COLOR_PAIR(MAZE_COLOR_WALL);
+                value = curses.applyColorPair(MAZE_COLOR_WALL, value);
             } else {
                 value = '?';
             }

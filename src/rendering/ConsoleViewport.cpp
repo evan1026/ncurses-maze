@@ -12,10 +12,10 @@ void ConsoleViewport::centerOn(Point p) {
     int x = 0,
         y = 0;
 
-    int innerWidth  = innerWindow->width,
-        innerHeight = innerWindow->height,
-        width       = containerWindow->width,
-        height      = containerWindow->height;
+    int innerWidth  = innerWindow->getWidth(),
+        innerHeight = innerWindow->getHeight(),
+        width       = containerWindow->getWidth(),
+        height      = containerWindow->getHeight();
 
     if (needsBorder()) {
         width = width - 2;
@@ -58,8 +58,8 @@ chtype ConsoleViewport::get(Point p) {
 void ConsoleViewport::refresh() {
     int startx = 0,
         starty = 0,
-        width = containerWindow->width,
-        height = containerWindow->height;
+        width = containerWindow->getWidth(),
+        height = containerWindow->getHeight();
 
 
     if (needsBorder()) {
@@ -75,7 +75,7 @@ void ConsoleViewport::refresh() {
             int innerX = x - innerWindowX;
             int innerY = y - innerWindowY;
 
-            if (innerX >= 0 && innerX < innerWindow->width && innerY >= 0 && innerY < innerWindow->height) {
+            if (innerX >= 0 && innerX < innerWindow->getWidth() && innerY >= 0 && innerY < innerWindow->getHeight()) {
                 containerWindow->set(x + startx, y + starty, innerWindow->get(innerX, innerY));
             } else {
                 containerWindow->set(x + startx, y + starty, '!');
@@ -85,11 +85,6 @@ void ConsoleViewport::refresh() {
     containerWindow->refresh();
 }
 
-void ConsoleViewport::init() {
-    containerWindow->init();
-}
-
 void ConsoleViewport::resize(Dimension d) {
     containerWindow = std::unique_ptr<ConsoleWindow>(new ConsoleWindow(d.x, d.y, d.width, d.height));
-    containerWindow->init();
 }

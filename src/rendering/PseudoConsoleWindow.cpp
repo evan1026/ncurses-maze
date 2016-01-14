@@ -21,3 +21,11 @@ chtype PseudoConsoleWindow::get(int x, int y) {
 chtype PseudoConsoleWindow::get(Point p) {
     return get(p.x, p.y);
 }
+
+int PseudoConsoleWindow::getWidth() {
+    return width;
+}
+
+int PseudoConsoleWindow::getHeight() {
+    return height;
+}

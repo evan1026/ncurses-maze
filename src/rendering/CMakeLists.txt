@@ -4,5 +4,6 @@ MESSAGE("Adding ${CURR_DIR}")
 set(SOURCES "${SOURCES} ${CURR_DIR}/ConsoleMazeRenderer.cpp
                         ${CURR_DIR}/PseudoConsoleWindow.cpp
                         ${CURR_DIR}/ConsoleWindow.cpp
-                        ${CURR_DIR}/ConsoleViewport.cpp"
+                        ${CURR_DIR}/ConsoleViewport.cpp
+                        ${CURR_DIR}/CursesInstance.cpp"
                         CACHE STRING "Sources for project" FORCE)

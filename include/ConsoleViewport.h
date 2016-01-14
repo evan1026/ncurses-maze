@@ -16,8 +16,8 @@ class ConsoleViewport {
         innerWindowY = 0;
 
     bool needsBorder() {
-        return innerWindow->width > containerWindow->width ||
-               innerWindow->height > containerWindow->height;
+        return innerWindow->getWidth() > containerWindow->getWidth() ||
+               innerWindow->getHeight() > containerWindow->getHeight();
     }
 
 public:
@@ -30,7 +30,6 @@ public:
     chtype get(int x, int y);
     chtype get(Point p);
     void refresh();
-    void init();
     void resize(Dimension dimension);
 };
 

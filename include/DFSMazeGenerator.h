@@ -10,8 +10,8 @@ class DFSMazeGenerator : public MazeGenerator {
 
     Point getRandomUnvisitedDirection(Maze& m, Point p);
 
-    public:
-        void generate(Maze& m);
+public:
+    void generate(Maze& m);
 };
 
 #endif
