@@ -7,7 +7,7 @@
 #include "Point.h"
 
 class ConsoleWindow {
-    CursesInstance curses; //Added to ensure we can init the window in constructor
+    CursesInstance curses;
     WINDOW* window;
 
     int width;
