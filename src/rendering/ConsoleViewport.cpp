@@ -26,8 +26,17 @@ void ConsoleViewport::centerOn(Point p) {
         if (x > 0)  x = 0;
         if (y > 0)  y = 0;
 
-        if (innerWidth > width   && x < width - innerWidth)     x = width - innerWidth;
-        if (innerHeight > height && y < height - innerHeight)   y = height - innerHeight;
+        if (innerWidth > width) {
+            if (x < width - innerWidth) x = width - innerWidth;
+        } else {
+            x = 0;
+        }
+
+        if (innerHeight > height) {
+           if (y < height - innerHeight) y = height - innerHeight;
+        } else {
+            y = 0;
+        }
     }
 
     innerWindowX = x;
