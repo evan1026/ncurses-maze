@@ -2,7 +2,8 @@
 #define MAZE_GENERATOR_TYPE_H
 
 enum MazeGeneratorType {
-    DFS
+    DFS,
+    PRIMS
 };
 
 #endif

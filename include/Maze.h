@@ -40,6 +40,8 @@ public:
 
     bool isUnconnected(Point p);
     bool isUnconnected(int x, int y);
+    bool isConnected(Point p);
+    bool isConnected(int x, int y);
 
     Point getCurrentPosition();
 

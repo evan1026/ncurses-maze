@@ -4,7 +4,6 @@
 
 #include "DFSMazeGenerator.h"
 #include "Maze.h"
-#include "MazeGenerator.h"
 #include "Point.h"
 
 Point DFSMazeGenerator::getRandomUnvisitedDirection(Maze& m, Point p) {

@@ -7,6 +7,7 @@
 #include "MazeGenerator.h"
 #include "MazeGeneratorType.h"
 #include "Point.h"
+#include "PrimsMazeGenerator.h"
 
 Maze::Maze(int _width, int _height, MazeGeneratorType g) : width(2 * _width + 1), height(2 * _height + 1),
                start(1, 1), end(width - 2, height - 2), cells(height, std::vector< MazeCell > (width, MazeCell())),
@@ -15,7 +16,7 @@ Maze::Maze(int _width, int _height, MazeGeneratorType g) : width(2 * _width + 1)
     setProperties(start, MazeCell::Properties::PART_OF_PATH);
 }
 
-Maze::Maze(int width, int height) : Maze(width, height, MazeGeneratorType::DFS) {}
+Maze::Maze(int width, int height) : Maze(width, height, MazeGeneratorType::PRIMS) {}
 
 void Maze::initGrid() {
     for (int i = 0; i < height; ++i) {
@@ -33,6 +34,8 @@ void Maze::generate(MazeGeneratorType g) {
 
     if (g == MazeGeneratorType::DFS) {
         generator = new DFSMazeGenerator();
+    } else if (g == MazeGeneratorType::PRIMS) {
+        generator = new PrimsMazeGenerator();
     } else {
         std::cerr << "MazeGeneratorType not recognized in Maze.cpp line " << __LINE__ << std::endl;
         return;
@@ -102,6 +105,17 @@ bool Maze::isUnconnected(int x, int y) {
            getLowerNeighbor(x, y).type == MazeCell::Type::WALL &&
            getRightNeighbor(x, y).type == MazeCell::Type::WALL &&
            getLeftNeighbor (x, y).type == MazeCell::Type::WALL;
+}
+
+bool Maze::isConnected(Point p) {
+    return isConnected(p.x, p.y);
+}
+
+bool Maze::isConnected(int x, int y) {
+    return getUpperNeighbor(x, y).type == MazeCell::Type::OPEN ||
+           getLowerNeighbor(x, y).type == MazeCell::Type::OPEN ||
+           getRightNeighbor(x, y).type == MazeCell::Type::OPEN ||
+           getLeftNeighbor (x, y).type == MazeCell::Type::OPEN;
 }
 
 Point Maze::getCurrentPosition() {
