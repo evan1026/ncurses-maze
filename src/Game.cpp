@@ -5,10 +5,11 @@
 
 #include "ConsoleMazeRenderer.h"
 #include "Game.h"
+#include "MazeGeneratorType.h"
 #include "MazeRenderer.h"
 #include "RenderType.h"
 
-Game::Game(RenderType rt, int width, int height) : maze(width, height) {
+Game::Game(RenderType rt, int width, int height, MazeGeneratorType t) : maze(width, height, t) {
     if (rt == RenderType::ConsoleRender) {
         renderer = std::unique_ptr<MazeRenderer>(new ConsoleMazeRenderer(maze.width, maze.height));
     } else {
