@@ -6,19 +6,21 @@
 #include "Maze.h"
 #include "Point.h"
 
+#define NUM_DIRECTIONS 4
+
 Point DFSMazeGenerator::getRandomUnvisitedDirection(Maze& m, Point p) {
 
     static Point directions[] = {Point(1,0), Point(-1,0), Point(0,1), Point(0,-1)};
 
-    short directionIndex = rand() % 4;
+    short directionIndex = rand() % NUM_DIRECTIONS;
     short attempts = 0;
 
-    while (!m.isUnconnected(p + 2 * directions[directionIndex]) && attempts < 4) {
-        directionIndex = (directionIndex + 1) % 4;
+    while (m.isConnected(p + 2 * directions[directionIndex]) && attempts < NUM_DIRECTIONS) {
+        directionIndex = (directionIndex + 1) % NUM_DIRECTIONS;
         ++attempts;
     }
 
-    if (attempts == 4)
+    if (attempts == NUM_DIRECTIONS)
         return Point(0, 0);
 
     return directions[directionIndex];

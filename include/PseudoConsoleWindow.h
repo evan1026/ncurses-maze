@@ -8,9 +8,8 @@
 
 //Not meant to be displayed, just written to and read from
 class PseudoConsoleWindow {
-
-    int width;
-    int height;
+    int width,
+        height;
     std::vector< std::vector< chtype > > cells;
 
 public:
@@ -18,6 +17,7 @@ public:
 
     void set(int x, int y, chtype c);
     void set(Point p, chtype c);
+
     chtype get(int x, int y);
     chtype get(Point p);
 

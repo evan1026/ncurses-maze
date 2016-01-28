@@ -4,8 +4,10 @@
 #include "Maze.h"
 
 class MazeGenerator {
+
 protected:
     MazeGenerator() = default;
+
 public:
     virtual ~MazeGenerator() {}
     MazeGenerator(const MazeGenerator& m) = default;

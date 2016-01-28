@@ -78,3 +78,7 @@ int CursesInstance::getWidth() {
 int CursesInstance::getHeight() {
     return getmaxy(stdscr);
 }
+
+int CursesInstance::getChar() {
+    return getch();
+}

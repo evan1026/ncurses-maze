@@ -21,8 +21,8 @@ Maze::Maze(int width, int height) : Maze(width, height, MazeGeneratorType::PRIMS
 void Maze::initGrid() {
     for (int i = 0; i < height; ++i) {
         for (int j = 0; j < width; ++j) {
-            if (i % 2 == 0 || j % 2 == 0) cells[i][j] = MazeCell(MazeCell::Type::WALL, MazeCell::Properties::P_NONE);
-            else                          cells[i][j] = MazeCell(MazeCell::Type::OPEN, MazeCell::Properties::P_NONE);
+            if (i % 2 == 0 || j % 2 == 0) cells[i][j] = MazeCell(MazeCell::Type::WALL, MazeCell::Properties::NONE);
+            else                          cells[i][j] = MazeCell(MazeCell::Type::OPEN, MazeCell::Properties::NONE);
         }
     }
 }
@@ -100,6 +100,7 @@ bool Maze::isUnconnected(Point p) {
     return isUnconnected(p.x, p.y);
 }
 
+//Unconnected means surrounded by walls (a cell on the edge is therefore not unconnected)
 bool Maze::isUnconnected(int x, int y) {
     return getUpperNeighbor(x, y).type == MazeCell::Type::WALL &&
            getLowerNeighbor(x, y).type == MazeCell::Type::WALL &&
@@ -111,6 +112,8 @@ bool Maze::isConnected(Point p) {
     return isConnected(p.x, p.y);
 }
 
+//Connected means has an open cell next to it. A cell which is on the edge
+//  and otherwise surrounded by walls is not connected
 bool Maze::isConnected(int x, int y) {
     return getUpperNeighbor(x, y).type == MazeCell::Type::OPEN ||
            getLowerNeighbor(x, y).type == MazeCell::Type::OPEN ||

@@ -1,34 +1,46 @@
-#include <cstdlib>
 #include <iostream>
 #include <string>
-#include <cstring>
 
 #include "Game.h"
 #include "MazeGeneratorType.h"
 #include "RenderType.h"
 
+extern "C" {
+    #include <argp.h>
+    const char* version    = "mazegame 1.0";
+    static char doc[]      = "Mazegame -- an interactive terminal-based maze written with ncurses";
+    static char args_doc[] = "WIDTH HEIGHT";
+    static struct argp_option options[] = {
+        {"generator", 'g', "GENERATOR", 0, "Changes maze generation. Accepted values are \"DFS\" (hard) and \"PRIMS\" (easy)" },
+        {"color",     'c', 0,           0, "Forces color rendering (overrides --no-color if used after)"},
+        {"no-color",  'n', 0,           0, "Forces no color rendering (overrides --color if used after)"},
+        { 0 }
+    };
+    static error_t parse_opt(int key, char *arg, struct argp_state *state);
+    static struct argp argp = { options, parse_opt, args_doc, doc };
+}
+
 struct Args {
     int width;
     int height;
-    bool valid = true;
     MazeGeneratorType generator;
+    RenderType renderer;
 
-    Args(int w, int h, MazeGeneratorType g) : width(w), height(h), generator(g) {}
-    Args() : Args(-1, -1, MazeGeneratorType::PRIMS) {}
-    bool isValid() { return width > 0 && height > 0 && valid; }
+    Args(int w, int h, MazeGeneratorType g, RenderType r) : width(w), height(h), generator(g), renderer(r) {}
+    Args() : Args(-1, -1, MazeGeneratorType::PRIMS, RenderType::CONSOLE_RENDER_DEFAULT) {}
+    bool valid() { return width > 0 && height > 0; }
 };
 
-Args processArgs(int argc, char* argv[]);
-void processIntArg(char* argv[], int& current, Args& a);
-void processOptionArg(char* argv[], int& current, Args& a);
-void processMGTArg(char* argv[], int& current, Args& a);
+MazeGeneratorType getMGTypeFromName(char* arg);
+void handleArg(struct argp_state* state, char* arg, Args& a);
 
 int main(int argc, char* argv[]) {
     bool win;
 
     {
-        Args a = processArgs(argc, argv);
-        Game game(RenderType::ConsoleRender, a.width, a.height, a.generator);
+        Args a;
+        argp_parse(&argp, argc, argv, 0, 0, &a);
+        Game game(a.renderer, a.width, a.height, a.generator);
         game.run();
         win = game.win();
     }
@@ -40,74 +52,63 @@ int main(int argc, char* argv[]) {
     }
 }
 
-Args processArgs(int argc, char* argv[]) {
-    Args a;
+static error_t parse_opt(int key, char* arg, struct argp_state* state) {
+    Args& a = *((Args*)state->input);
 
-    for (int i = 1; i < argc; ++i) {
-        if (argv[i][0] != '-') processIntArg(argv, i, a);
-        else                   processOptionArg(argv, i, a);
+    switch (key) {
+        case 'g':
+            a.generator = getMGTypeFromName(arg);
+            if (a.generator == MazeGeneratorType::UNKNOWN) {
+                argp_error(state, "unknown generator -- '%s'", arg);
+            }
+            break;
+        case 'c':
+            a.renderer = RenderType::CONSOLE_RENDER_COLOR;
+            break;
+        case 'n':
+            a.renderer = RenderType::CONSOLE_RENDER_NO_COLOR;
+            break;
+        case ARGP_KEY_ARG:
+            handleArg(state, arg, a);
+            break;
+        case ARGP_KEY_END:
+            if (!a.valid()) argp_error(state, "too few arguments");
+            break;
+        default:
+            return ARGP_ERR_UNKNOWN;
     }
-
-    if (!a.isValid()) {
-        std::cout << "Usage: " << argv[0] << " <width> <height>" << std::endl;
-        exit(1);
-    }
-
-    return a;
+    return 0;
 }
 
-//assumes current < argc
-void processIntArg(char* argv[], int& current, Args& a) {
-    char* p;
-    int output = strtol(argv[current], &p, 10);
-
-    if (*p != 0 || output <= 0 || (a.width != -1 && a.height != -1)) {
-        std::cout << "Invalid " << (a.width == -1 ? "width" : a.height == -1 ? "height" : "parameter") << ": \"" << argv[current] << "\"" << std::endl;
-        a.valid = false;
-    } else {
-        if (a.width == -1) {
-            a.width = output;
-        } else {
-            a.height = output;
-        }
+MazeGeneratorType getMGTypeFromName(char* arg) {
+    std::string s(arg);
+    for (int i = 0; i < s.size(); ++i) {
+        s.at(i) = toupper(s.at(i));
     }
-}
 
-//assumes current < argc
-//        argv[current][0] == '-'
-void processOptionArg(char* argv[], int& current, Args& a) {
-    if (argv[current][1] != '-') { //short args
-        if (argv[current][2] != 0) { //flag combining not currently supported
-            std::cout << "Short option combination not supported. Please put each as a seperate argument." << std::endl;
-            a.valid = false;
-        } else if (argv[current][1] == 'g') {
-            ++current;
-            processMGTArg(argv, current, a);
-        } else {
-            std::cout << "Unrecognized option: \"" << argv[current][1] << "\"" << std::endl;
-            a.valid = false;
-        }
+    if (s == "PRIMS") {
+        return MazeGeneratorType::PRIMS;
+    } else if (s == "DFS") {
+        return MazeGeneratorType::DFS;
     } else {
-        if (strcmp(argv[current], "--generator") == 0) {
-            ++current;
-            processMGTArg(argv, current, a);
-        } else {
-            std::cout << "Unrecognized option: \"" << argv[current] << "\"" << std::endl;
-            a.valid = false;
-        }
+        return MazeGeneratorType::UNKNOWN;
     }
 }
 
-//assumes current < argc
-//        argc[current] refers to the argument of a generator flag
-void processMGTArg(char* argv[], int& current, Args& a) {
-    if (strcmp(argv[current], "prim") == 0) {
-        a.generator = MazeGeneratorType::PRIMS;
-    } else if (strcmp(argv[current], "dfs") == 0) {
-        a.generator = MazeGeneratorType::DFS;
+void handleArg(struct argp_state *state, char* arg, Args& a) {
+    char* p = nullptr; //initialized to suppress warnings; the program exits before it's used w/o initialization
+
+    if (a.width == -1) {
+        a.width = strtol(arg, &p, 10);
+        if (a.width <= 0) argp_error(state, "width must be greater than 0");
+    } else if (a.height == -1) {
+        a.height = strtol(arg, &p, 10);
+        if (a.height <= 0) argp_error(state, "height must be greater than 0");
     } else {
-        std::cout << "Unrecognized generator type: \"" << argv[current] << "\"" << std::endl;
-        std::cout << "Recognized options are: prim, dfs" << std::endl;
-        a.valid = false;
+        argp_error(state, "too many args");
+    }
+
+    if (*p != 0) {
+        argp_error(state, "invalid arg -- '%s'", arg);
     }
 }

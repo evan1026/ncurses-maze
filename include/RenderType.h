@@ -1,9 +1,10 @@
 #ifndef RENDER_TYPE_H
 #define RENDER_TYPE_H
 
-enum RenderType {
-    ConsoleRender,
-    GLRender
+enum class RenderType {
+    CONSOLE_RENDER_COLOR,
+    CONSOLE_RENDER_NO_COLOR,
+    CONSOLE_RENDER_DEFAULT
 };
 
 #endif

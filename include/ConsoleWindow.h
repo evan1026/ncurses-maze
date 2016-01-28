@@ -10,10 +10,10 @@ class ConsoleWindow {
     CursesInstance curses;
     WINDOW* window;
 
-    int width;
-    int height;
-    int x;
-    int y;
+    int width,
+        height,
+        x,
+        y;
 
 public:
     ConsoleWindow(int x, int y, int width, int height);
@@ -25,8 +25,10 @@ public:
 
     void set(int x, int y, chtype c);
     void set(Point p, chtype c);
+
     chtype get(int x, int y);
     chtype get(Point p);
+
     void drawBox();
     void refresh();
 

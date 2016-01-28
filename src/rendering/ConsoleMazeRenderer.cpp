@@ -15,9 +15,19 @@
 #define MAZE_COLOR_END       4
 #define MAZE_COLOR_CURRENT   5
 
-ConsoleMazeRenderer::ConsoleMazeRenderer(int _mazeWidth, int _mazeHeight) :
-                window(getWindowDimension(), _mazeWidth, _mazeHeight), curses() {
+ConsoleMazeRenderer::ConsoleMazeRenderer(int mazeWidth, int mazeHeight) :
+                window(getWindowDimension(), mazeWidth, mazeHeight), curses(), color(curses.hasColor()) {
+    if (color) {
+        initColors();
+    }
+}
 
+ConsoleMazeRenderer::ConsoleMazeRenderer(int mazeWidth, int mazeHeight, bool _color) :
+                ConsoleMazeRenderer(mazeWidth, mazeHeight) {
+    color = _color;
+}
+
+void ConsoleMazeRenderer::initColors() {
     curses.initColorPair(MAZE_COLOR_EMPTY,    COLOR_BLACK, COLOR_BLACK);
     curses.initColorPair(MAZE_COLOR_WALL,     COLOR_BLACK, COLOR_WHITE);
     curses.initColorPair(MAZE_COLOR_PATH,     COLOR_BLACK, COLOR_BLUE);
@@ -55,7 +65,7 @@ void ConsoleMazeRenderer::renderCell(Maze& maze, int x, int y) {
     MazeCell cell = maze.get(x, y);
     chtype value = '['; //All random chars like this are to ease debugging
 
-    if (curses.hasColor()) {
+    if (color) {
         value = ' ';
 
         if (maze.getCurrentPosition() == Point(x,y)) {

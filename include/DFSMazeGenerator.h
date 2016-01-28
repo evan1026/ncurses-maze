@@ -7,7 +7,6 @@
 
 //DFS -> Depth first search
 class DFSMazeGenerator : public MazeGenerator {
-
     Point getRandomUnvisitedDirection(Maze& m, Point p);
 
 public:

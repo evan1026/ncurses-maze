@@ -1,6 +1,7 @@
 #include <chrono>
 #include <iostream>
 #include <memory>
+#include <ncurses.h>
 #include <thread>
 
 #include "ConsoleMazeRenderer.h"
@@ -9,21 +10,28 @@
 #include "MazeRenderer.h"
 #include "RenderType.h"
 
-Game::Game(RenderType rt, int width, int height, MazeGeneratorType t) : maze(width, height, t) {
-    if (rt == RenderType::ConsoleRender) {
-        renderer = std::unique_ptr<MazeRenderer>(new ConsoleMazeRenderer(maze.width, maze.height));
-    } else {
-        std::cerr << "RenderType not recognized in Game.cpp line " << __LINE__ << std::endl;
-        renderer = std::unique_ptr<MazeRenderer>(nullptr); //Not ideal, but we shouldn't be here anyway
+Game::Game(RenderType rt, int width, int height, MazeGeneratorType t) : maze(width, height, t), curses() {
+    switch (rt) {
+        case RenderType::CONSOLE_RENDER_DEFAULT:
+            renderer = std::unique_ptr<MazeRenderer>(new ConsoleMazeRenderer(maze.width, maze.height));
+            break;
+        case RenderType::CONSOLE_RENDER_COLOR:
+            renderer = std::unique_ptr<MazeRenderer>(new ConsoleMazeRenderer(maze.width, maze.height, true));
+            break;
+        case RenderType::CONSOLE_RENDER_NO_COLOR:
+            renderer = std::unique_ptr<MazeRenderer>(new ConsoleMazeRenderer(maze.width, maze.height, false));
+            break;
+        default:
+            std::cerr << "RenderType not recognized in Game.cpp line " << __LINE__ << std::endl;
+            renderer = std::unique_ptr<MazeRenderer>(nullptr); //Not ideal, but we shouldn't be here anyway
+            break;
     }
 }
 
 void Game::run() {
-
-    //TODO Input based on input type
     bool looping = true;
     while (looping) {
-        int ch = getch();
+        int ch = curses.getChar();
 
         switch(ch) {
             case KEY_UP:

@@ -25,7 +25,9 @@ public:
 
     Maze(int width, int height);
     Maze(int width, int height, MazeGeneratorType g);
+
     void generate(MazeGeneratorType g);
+
     MazeCell get(int x, int y);
     MazeCell get(Point p);
 

@@ -1,9 +1,10 @@
 #ifndef MAZE_GENERATOR_TYPE_H
 #define MAZE_GENERATOR_TYPE_H
 
-enum MazeGeneratorType {
+enum class MazeGeneratorType {
     DFS,
-    PRIMS
+    PRIMS,
+    UNKNOWN
 };
 
 #endif

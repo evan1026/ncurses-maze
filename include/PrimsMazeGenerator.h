@@ -12,6 +12,7 @@ class PrimsMazeGenerator : public MazeGenerator {
     bool isInMaze(Point p, Maze& m);
     void removePoint(int index, std::vector<Point>& container);
     bool vecContains(Point p, std::vector<Point>& container);
+
 public:
     void generate(Maze& m);
 };

@@ -24,10 +24,13 @@ public:
 
     void centerOn(Point position);
     void centerOn(int x, int y);
+
     void set(int x, int y, chtype c);
     void set(Point p, chtype c);
+
     chtype get(int x, int y);
     chtype get(Point p);
+
     void refresh();
     void resize(Dimension dimension);
 };

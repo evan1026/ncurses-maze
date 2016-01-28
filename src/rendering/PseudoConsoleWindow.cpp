@@ -3,8 +3,8 @@
 
 #include "PseudoConsoleWindow.h"
 
-PseudoConsoleWindow::PseudoConsoleWindow(int _width, int _height) : width(_width), height(_height),
-                                             cells(height, std::vector< chtype > (width, 0)) {}
+PseudoConsoleWindow::PseudoConsoleWindow(int _width, int _height) :
+            width(_width), height(_height), cells(height, std::vector< chtype > (width, 0)) {}
 
 void PseudoConsoleWindow::set(int x, int y, chtype c) {
     cells[y][x] = c;

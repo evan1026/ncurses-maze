@@ -33,10 +33,10 @@ bool PrimsMazeGenerator::vecContains(Point p, std::vector<Point>& container) {
 }
 
 void PrimsMazeGenerator::generate(Maze& m) {
-
     start = m.start;
 
     std::vector<Point> points;
+
     srand(time(NULL));
 
     for (Point d : directions) {
