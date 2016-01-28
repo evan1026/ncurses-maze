@@ -15,7 +15,7 @@ Point DFSMazeGenerator::getRandomUnvisitedDirection(Maze& m, Point p) {
     short directionIndex = rand() % NUM_DIRECTIONS;
     short attempts = 0;
 
-    while (m.isConnected(p + 2 * directions[directionIndex]) && attempts < NUM_DIRECTIONS) {
+    while (!m.isUnconnected(p + 2 * directions[directionIndex]) && attempts < NUM_DIRECTIONS) {
         directionIndex = (directionIndex + 1) % NUM_DIRECTIONS;
         ++attempts;
     }
