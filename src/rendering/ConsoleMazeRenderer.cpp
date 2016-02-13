@@ -16,7 +16,7 @@
 #define MAZE_COLOR_CURRENT   5
 
 ConsoleMazeRenderer::ConsoleMazeRenderer(int mazeWidth, int mazeHeight) :
-                window(getWindowDimension(), mazeWidth, mazeHeight), curses(), color(curses.hasColor()) {
+                mazeWindow(getWindowDimension(), mazeWidth, mazeHeight), curses(), color(curses.hasColor()) {
     if (color) {
         initColors();
     }
@@ -48,17 +48,17 @@ void ConsoleMazeRenderer::handleResize() {
 
     int width = curses.getWidth();
     int height = curses.getHeight();
-    window.resize(Dimension(0, 0, width, height));
+    mazeWindow.resize(Dimension(0, 0, width, height));
 }
 
 void ConsoleMazeRenderer::render(Maze& maze) {
-    window.centerOn(maze.getCurrentPosition());
+    mazeWindow.centerOn(maze.getCurrentPosition());
     for (int i = 0; i < maze.width; ++i) {
         for (int j = 0; j < maze.height; ++j) {
             renderCell(maze, i, j);
         }
     }
-    window.refresh();
+    mazeWindow.refresh();
 }
 
 void ConsoleMazeRenderer::renderCell(Maze& maze, int x, int y) {
@@ -120,7 +120,7 @@ void ConsoleMazeRenderer::renderCell(Maze& maze, int x, int y) {
         }
     }
 
-    window.set(x, y, value);
+    mazeWindow.set(x, y, value);
 }
 
 chtype ConsoleMazeRenderer::getASCIIFromFlags(unsigned char flags) {

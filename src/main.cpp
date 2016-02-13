@@ -50,6 +50,8 @@ int main(int argc, char* argv[]) {
     } else {
         std::cout << "Quitter!" << std::endl;
     }
+
+    std::cout << Stats::getInst();
 }
 
 static error_t parse_opt(int key, char* arg, struct argp_state* state) {

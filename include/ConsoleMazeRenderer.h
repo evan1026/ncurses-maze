@@ -7,7 +7,7 @@
 #include "MazeRenderer.h"
 
 class ConsoleMazeRenderer : public MazeRenderer {
-    ConsoleViewport window;
+    ConsoleViewport mazeWindow;
     CursesInstance curses;
     bool color;
 

@@ -3,7 +3,8 @@ MESSAGE("Adding ${CURR_DIR}")
 
 set(SOURCES "${SOURCES} ${CURR_DIR}/main.cpp
                         ${CURR_DIR}/Game.cpp
-                        ${CURR_DIR}/Maze.cpp" CACHE STRING "Sources for project" FORCE)
+                        ${CURR_DIR}/Maze.cpp
+                        ${CURR_DIR}/Stats.cpp" CACHE STRING "Sources for project" FORCE)
 
 add_subdirectory("rendering")
 add_subdirectory("generation")
