@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 #include <string>
 
 #include "Stats.h"
@@ -99,9 +100,15 @@ namespace {
 }
 
 std::ostream& operator<<(std::ostream& os, const Stats& obj) {
+    int maxLength = 0;
+    for (auto iter = obj.stats.begin(); iter != obj.stats.end(); iter++) {
+        int length = iter->first.length();
+        if (length > maxLength) maxLength = length;
+    }
+
     os << std::endl << "Stats:" << std::endl;
     for (auto iter = obj.stats.begin(); iter != obj.stats.end(); iter++) {
-        os << "    " << iter->first << " : ";
+        os << "    " << std::setw(maxLength) << iter->first << " : ";
 
         switch (iter->second.type) {
             case Statistic::Type::INT:
