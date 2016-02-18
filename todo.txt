@@ -1,2 +1,1 @@
-TODO Make maze window shrink to fit maze
 TODO Second window with stats

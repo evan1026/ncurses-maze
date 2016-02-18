@@ -33,6 +33,8 @@ public:
 
     void refresh();
     void resize(Dimension dimension);
+
+    void shrinkToFit();
 };
 
 #endif

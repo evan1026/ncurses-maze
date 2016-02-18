@@ -5,7 +5,10 @@
 #include "Point.h"
 
 ConsoleViewport::ConsoleViewport(Dimension d, int innerWidth, int innerHeight) :
-            innerWindow(innerWidth, innerHeight), containerWindow(d.x, d.y, d.width, d.height) {}
+            innerWindow(innerWidth, innerHeight),
+            containerWindow(d.x, d.y, d.width, d.height) {
+    shrinkToFit();
+}
 
 void ConsoleViewport::centerOn(Point p) {
     int x = 0,
@@ -94,4 +97,22 @@ void ConsoleViewport::refresh() {
 
 void ConsoleViewport::resize(Dimension d) {
     containerWindow = ConsoleWindow(d.x, d.y, d.width, d.height);
+}
+
+void ConsoleViewport::shrinkToFit() {
+    int newWidth = containerWindow.getWidth(),
+        newHeight = containerWindow.getHeight();
+
+    if (innerWindow.getWidth() < newWidth)
+        newWidth = innerWindow.getWidth();
+    if (innerWindow.getHeight() < newHeight)
+        newHeight = innerWindow.getHeight();
+
+    if (newWidth == innerWindow.getWidth() && newHeight < innerWindow.getHeight())
+        newWidth += 2;
+    else if (newHeight == innerWindow.getHeight() && newWidth < innerWindow.getWidth())
+        newHeight += 2;
+
+    if (newWidth != containerWindow.getWidth() || newHeight != containerWindow.getHeight())
+        containerWindow = ConsoleWindow(containerWindow.getX(), containerWindow.getY(), newWidth, newHeight);
 }
