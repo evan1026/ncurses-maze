@@ -3,6 +3,7 @@
 
 #include <vector>
 
+#include "CursesInstance.h"
 #include "MazeCell.h"
 #include "MazeGeneratorType.h"
 #include "Point.h"
@@ -60,6 +61,19 @@ public:
 private:
     std::vector< std::vector< MazeCell > > cells; //It's much easier to initialize if this is declared after width and height
     Point currentPosition;
+
+public:
+    class Solver {
+        Maze& maze;
+        bool inprogress = false;
+        public:
+            Solver(Maze& m) : maze(m) {}
+            void start();
+            void stop();
+            void step();
+            bool done();
+            bool inProgress();
+    };
 };
 
 #endif

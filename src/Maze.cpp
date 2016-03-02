@@ -85,7 +85,7 @@ MazeCell Maze::getRightNeighbor(int x, int y) {
 }
 
 MazeCell Maze::getRightNeighbor(Point p) {
-    return get(p.x, p.y);
+    return getRightNeighbor(p.x, p.y);
 }
 
 MazeCell Maze::getLeftNeighbor(int x, int y) {
@@ -93,7 +93,7 @@ MazeCell Maze::getLeftNeighbor(int x, int y) {
 }
 
 MazeCell Maze::getLeftNeighbor(Point p) {
-    return get(p.x, p.y);
+    return getLeftNeighbor(p.x, p.y);
 }
 
 bool Maze::isUnconnected(Point p) {
@@ -168,4 +168,56 @@ bool Maze::moveLeft() {
 
 bool Maze::moveRight() {
     return move(Point(1,0));
+}
+
+void Maze::Solver::start() {
+    maze.currentPosition = maze.start;
+
+    for (int i = 0; i < maze.width; ++i) {
+        for (int j = 0; j < maze.height; ++j) {
+            maze.setProperties(i, j, MazeCell::Properties::NONE);
+        }
+    }
+    maze.setProperties(maze.start, MazeCell::Properties::PART_OF_PATH);
+    inprogress = true;
+}
+
+void Maze::Solver::stop() {
+    inprogress = false;
+}
+
+void Maze::Solver::step() {
+    MazeCell upper = maze.getUpperNeighbor(maze.currentPosition),
+             lower = maze.getLowerNeighbor(maze.currentPosition),
+             right = maze.getRightNeighbor(maze.currentPosition),
+             left  = maze.getLeftNeighbor (maze.currentPosition);
+
+    if (lower.type == MazeCell::Type::OPEN && lower.properties == MazeCell::Properties::NONE) {
+        maze.moveDown();
+    } else if (right.type == MazeCell::Type::OPEN && right.properties == MazeCell::Properties::NONE) {
+        maze.moveRight();
+    } else if (left.type == MazeCell::Type::OPEN && left.properties == MazeCell::Properties::NONE) {
+        maze.moveLeft();
+    } else if (upper.type == MazeCell::Type::OPEN && upper.properties == MazeCell::Properties::NONE) {
+        maze.moveUp();
+    } else {
+        // need to backtrack
+        if (lower.type == MazeCell::Type::OPEN && lower.properties == MazeCell::Properties::PART_OF_PATH) {
+            maze.moveDown();
+        } else if (right.type == MazeCell::Type::OPEN && right.properties == MazeCell::Properties::PART_OF_PATH) {
+            maze.moveRight();
+        } else if (left.type == MazeCell::Type::OPEN && left.properties == MazeCell::Properties::PART_OF_PATH) {
+            maze.moveLeft();
+        } else {
+            maze.moveUp();
+        }
+    }
+}
+
+bool Maze::Solver::done() {
+    return maze.currentPosition == maze.end;
+}
+
+bool Maze::Solver::inProgress() {
+    return inprogress;
 }

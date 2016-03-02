@@ -1,6 +1,6 @@
+#include <cctype>
 #include <chrono>
 #include <ctime>
-#include <cctype>
 #include <iostream>
 #include <memory>
 #include <ncurses.h>
@@ -13,7 +13,11 @@
 #include "MazeRenderer.h"
 #include "RenderType.h"
 
-Game::Game(RenderType rt, int width, int height, MazeGeneratorType t) : maze(width, height, t), curses(), stats(Stats::getInst()) {
+#define DEFAULT_DELAY 33
+#define NO_DELAY 0
+
+Game::Game(RenderType rt, int width, int height, MazeGeneratorType t) :
+            maze(width, height, t), curses(), stats(Stats::getInst()), solver(maze) {
 
     switch (rt) {
         case RenderType::CONSOLE_RENDER_DEFAULT:
@@ -36,9 +40,14 @@ Game::Game(RenderType rt, int width, int height, MazeGeneratorType t) : maze(wid
 }
 
 void Game::run() {
+    int delayMS = DEFAULT_DELAY;
     bool looping = true;
+
     while (looping) {
         int ch = curses.getChar();
+
+        if (solver.inProgress())
+            solver.step();
 
         switch(ch) {
             case KEY_UP:
@@ -66,6 +75,23 @@ void Game::run() {
                 countKeyPress("RESIZE");
                 renderer->handleResize();
                 break;
+            case ' ':
+                countKeyPress("SPACE");
+                stats.setBool("cheated", true);
+                if (solver.inProgress()) {
+                    solver.stop();
+                    delayMS = DEFAULT_DELAY;
+                } else
+                    solver.start();
+                break;
+            case 's':
+                countKeyPress("s");
+                if (solver.inProgress()) {
+                    if (delayMS != NO_DELAY)
+                        delayMS = NO_DELAY;
+                    else
+                        delayMS = DEFAULT_DELAY;
+                }
             case -1:
                 //no key in queue
                 break;
@@ -81,7 +107,7 @@ void Game::run() {
         }
 
         renderer->render(maze);
-        std::this_thread::sleep_for(std::chrono::milliseconds(33)); //33 ms ~ 30 fps
+        std::this_thread::sleep_for(std::chrono::milliseconds(delayMS));
     }
     stats.setTime("endTime", time(nullptr));
 }

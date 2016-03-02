@@ -51,7 +51,11 @@ int main(int argc, char* argv[]) {
         std::cout << "Quitter!" << std::endl;
     }
 
-    std::cout << Stats::getInst();
+    Stats s = Stats::getInst();
+
+    std::cout << s;
+
+    std::cout << "Elapsed time: " << s.getTime("endTime")() - s.getTime("startTime")() << "s" << std::endl;
 }
 
 static error_t parse_opt(int key, char* arg, struct argp_state* state) {

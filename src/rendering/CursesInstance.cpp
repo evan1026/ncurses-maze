@@ -11,8 +11,8 @@ CursesInstance::CursesInstance() {
             initscr(); //Basic init
             cbreak(); //Don't wait for \n to put chars in buffer
             noecho(); //Don't print typed characters to the screen
-            keypad(stdscr, TRUE); //Enables reading special characters like F1, F2, ..., arrow keys, etc.
-            nodelay(stdscr, TRUE); //Makes getch non-blocking
+            keypad(stdscr, true); //Enables reading special characters like F1, F2, ..., arrow keys, etc.
+            nodelay(stdscr, true); //Makes getch non-blocking
             curs_set(0); //Makes cursor invisible
 
             if (has_colors()) {

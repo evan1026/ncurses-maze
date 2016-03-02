@@ -15,6 +15,7 @@ class Game {
     Maze maze;
     CursesInstance curses;
     Stats& stats;
+    Maze::Solver solver;
 
     void countKeyPress();
     void countKeyPress(std::string keyName);

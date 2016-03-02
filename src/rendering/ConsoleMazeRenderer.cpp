@@ -49,6 +49,7 @@ void ConsoleMazeRenderer::handleResize() {
     int width = curses.getWidth();
     int height = curses.getHeight();
     mazeWindow.resize(Dimension(0, 0, width, height));
+    mazeWindow.shrinkToFit();
 }
 
 void ConsoleMazeRenderer::render(Maze& maze) {
