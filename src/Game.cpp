@@ -88,9 +88,11 @@ void Game::run() {
                     else
                         delayMS = DEFAULT_DELAY;
                 }
+                break;
             case 'c':
                 countKeyPress("c");
                 switchRenderer();
+                break;
             case -1:
                 //no key in queue
                 break;
