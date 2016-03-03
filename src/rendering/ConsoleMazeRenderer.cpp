@@ -164,3 +164,11 @@ chtype ConsoleMazeRenderer::getASCIIFromFlags(unsigned char flags) {
             return '}'; //because it really shouldn't happen
     }
 }
+
+bool ConsoleMazeRenderer::getColor() {
+    return color;
+}
+
+void ConsoleMazeRenderer::setColor(bool c) {
+    color = c;
+}

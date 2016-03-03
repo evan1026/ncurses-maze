@@ -3,22 +3,23 @@
 
 #include <memory>
 
+#include "ConsoleMazeRenderer.h"
 #include "CursesInstance.h"
 #include "Maze.h"
 #include "MazeGeneratorType.h"
-#include "MazeRenderer.h"
 #include "RenderType.h"
 #include "Stats.h"
 
 class Game {
-    std::unique_ptr<MazeRenderer> renderer;
     Maze maze;
     CursesInstance curses;
     Stats& stats;
     Maze::Solver solver;
+    ConsoleMazeRenderer renderer;
 
     void countKeyPress();
     void countKeyPress(std::string keyName);
+    void switchRenderer();
 
 public:
     Game(RenderType rt, int width, int height, MazeGeneratorType t);

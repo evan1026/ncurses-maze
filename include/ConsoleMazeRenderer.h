@@ -4,9 +4,8 @@
 #include "ConsoleViewport.h"
 #include "CursesInstance.h"
 #include "Maze.h"
-#include "MazeRenderer.h"
 
-class ConsoleMazeRenderer : public MazeRenderer {
+class ConsoleMazeRenderer {
     ConsoleViewport mazeWindow;
     CursesInstance curses;
     bool color;
@@ -22,6 +21,9 @@ public:
 
     void render(Maze& maze);
     void handleResize();
+
+    bool getColor();
+    void setColor(bool c);
 };
 
 #endif

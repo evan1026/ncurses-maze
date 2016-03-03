@@ -108,10 +108,17 @@ void ConsoleViewport::shrinkToFit() {
     if (innerWindow.getHeight() < newHeight)
         newHeight = innerWindow.getHeight();
 
-    if (newWidth == innerWindow.getWidth() && newHeight < innerWindow.getHeight())
-        newWidth += 2;
-    else if (newHeight == innerWindow.getHeight() && newWidth < innerWindow.getWidth())
-        newHeight += 2;
+    if (newWidth == innerWindow.getWidth() && newHeight < innerWindow.getHeight()) {
+        int roomToGrow = containerWindow.getWidth() - newWidth;
+        if      (roomToGrow < 0) roomToGrow = 0;
+        else if (roomToGrow > 2) roomToGrow = 2;
+        newWidth += roomToGrow;
+    } else if (newHeight == innerWindow.getHeight() && newWidth < innerWindow.getWidth()) {
+        int roomToGrow = containerWindow.getHeight() - newHeight;
+        if      (roomToGrow < 0) roomToGrow = 0;
+        else if (roomToGrow > 2) roomToGrow = 2;
+        newHeight += roomToGrow;
+    }
 
     if (newWidth != containerWindow.getWidth() || newHeight != containerWindow.getHeight())
         containerWindow = ConsoleWindow(containerWindow.getX(), containerWindow.getY(), newWidth, newHeight);

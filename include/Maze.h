@@ -62,6 +62,7 @@ public:
     bool moveRight();
 
     Point popNextModifiedPoint();
+    void refresh();
 
 private:
     std::vector< std::vector< MazeCell > > cells; //It's much easier to initialize if this is declared after width and height

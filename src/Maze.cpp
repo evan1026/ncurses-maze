@@ -184,6 +184,14 @@ Point Maze::popNextModifiedPoint() {
     return out;
 }
 
+void Maze::refresh() {
+    for (int i = 0; i < width; ++i) {
+        for (int j = 0; j < height; ++j) {
+            modifiedPoints.push(Point(i,j));
+        }
+    }
+}
+
 void Maze::Solver::start() {
     maze.currentPosition = maze.start;
 
