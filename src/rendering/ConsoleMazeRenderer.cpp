@@ -53,12 +53,14 @@ void ConsoleMazeRenderer::handleResize() {
 }
 
 void ConsoleMazeRenderer::render(Maze& maze) {
+    Point currPoint;
+
     mazeWindow.centerOn(maze.getCurrentPosition());
-    for (int i = 0; i < maze.width; ++i) {
-        for (int j = 0; j < maze.height; ++j) {
-            renderCell(maze, i, j);
-        }
+
+    while ((currPoint = maze.popNextModifiedPoint()) != Point(-1,-1)) {
+        renderCell(maze, currPoint.x, currPoint.y);
     }
+
     mazeWindow.refresh();
 }
 

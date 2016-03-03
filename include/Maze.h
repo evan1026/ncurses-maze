@@ -1,6 +1,7 @@
 #ifndef MAZE_H
 #define MAZE_H
 
+#include <queue>
 #include <vector>
 
 #include "CursesInstance.h"
@@ -9,6 +10,8 @@
 #include "Point.h"
 
 class Maze {
+    std::queue<Point> modifiedPoints;
+
     void initGrid();
 
     MazeCell& getRef(int x, int y);
@@ -57,6 +60,8 @@ public:
     bool moveDown();
     bool moveLeft();
     bool moveRight();
+
+    Point popNextModifiedPoint();
 
 private:
     std::vector< std::vector< MazeCell > > cells; //It's much easier to initialize if this is declared after width and height

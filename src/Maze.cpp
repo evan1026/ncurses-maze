@@ -9,7 +9,7 @@
 #include "Point.h"
 #include "PrimsMazeGenerator.h"
 
-Maze::Maze(int _width, int _height, MazeGeneratorType g) : width(2 * _width + 1), height(2 * _height + 1),
+Maze::Maze(int _width, int _height, MazeGeneratorType g) : modifiedPoints(), width(2 * _width + 1), height(2 * _height + 1),
                start(1, 1), end(width - 2, height - 2), cells(height, std::vector< MazeCell > (width, MazeCell())),
                currentPosition(start) {
     generate(g);
@@ -23,6 +23,8 @@ void Maze::initGrid() {
         for (int j = 0; j < width; ++j) {
             if (i % 2 == 0 || j % 2 == 0) cells[i][j] = MazeCell(MazeCell::Type::WALL, MazeCell::Properties::NONE);
             else                          cells[i][j] = MazeCell(MazeCell::Type::OPEN, MazeCell::Properties::NONE);
+
+            modifiedPoints.push(Point(i,j));
         }
     }
 }
@@ -127,6 +129,7 @@ Point Maze::getCurrentPosition() {
 
 void Maze::setType(int x, int y, MazeCell::Type t) {
     getRef(x, y).type = t;
+    modifiedPoints.push(Point(x,y));
 }
 
 void Maze::setType(Point p, MazeCell::Type t) {
@@ -135,6 +138,7 @@ void Maze::setType(Point p, MazeCell::Type t) {
 
 void Maze::setProperties(int x, int y, MazeCell::Properties pr) {
     getRef(x, y).properties = pr;
+    modifiedPoints.push(Point(x,y));
 }
 
 void Maze::setProperties(Point p, MazeCell::Properties pr) {
@@ -147,6 +151,7 @@ bool Maze::move(Point p) {
         if (cell.properties == MazeCell::Properties::PART_OF_PATH) {
             setProperties(currentPosition, MazeCell::Properties::NOT_PART_OF_PATH);
         }
+        modifiedPoints.push(currentPosition);
         currentPosition += p;
         setProperties(currentPosition, MazeCell::Properties::PART_OF_PATH);
         return true;
@@ -168,6 +173,15 @@ bool Maze::moveLeft() {
 
 bool Maze::moveRight() {
     return move(Point(1,0));
+}
+
+Point Maze::popNextModifiedPoint() {
+    Point out = Point(-1,-1);
+    if (!modifiedPoints.empty()) {
+        out = modifiedPoints.front();
+        modifiedPoints.pop();
+    }
+    return out;
 }
 
 void Maze::Solver::start() {
