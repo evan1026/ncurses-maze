@@ -20,6 +20,7 @@ class Game {
     void countKeyPress();
     void countKeyPress(std::string keyName);
     void switchRenderer();
+    void move(int direction);
 
 public:
     Game(RenderType rt, int width, int height, MazeGeneratorType t);

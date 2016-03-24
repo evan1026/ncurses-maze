@@ -8,6 +8,7 @@
 #include "MazeGeneratorType.h"
 #include "Point.h"
 #include "PrimsMazeGenerator.h"
+#include "Stats.h"
 
 Maze::Maze(int _width, int _height, MazeGeneratorType g) : modifiedPoints(), width(2 * _width + 1), height(2 * _height + 1),
                start(1, 1), end(width - 2, height - 2), cells(height, std::vector< MazeCell > (width, MazeCell())),
@@ -150,6 +151,12 @@ bool Maze::move(Point p) {
     if (cell.type == MazeCell::Type::OPEN) {
         if (cell.properties == MazeCell::Properties::PART_OF_PATH) {
             setProperties(currentPosition, MazeCell::Properties::NOT_PART_OF_PATH);
+            Stats::getInst().decrementOrCreateInt("pathLength");
+            Stats::getInst().incrementOrCreateInt("wrongPathsLength");
+        } else {
+            Stats::getInst().incrementOrCreateInt("pathLength");
+            if (cell.properties == MazeCell::Properties::NOT_PART_OF_PATH)
+                Stats::getInst().decrementOrCreateInt("wrongPathsLength");
         }
         modifiedPoints.push(currentPosition);
         currentPosition += p;

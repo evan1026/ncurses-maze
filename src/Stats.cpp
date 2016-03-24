@@ -89,6 +89,17 @@ void Stats::setTime(std::string key, time_t value) {
     setStat(key, Statistic(value));
 }
 
+void Stats::incrementOrCreateInt(std::string key) {
+    Maybe<int> val = getInteger(key);
+    if (val) setInteger(key, val() + 1);
+    else     setInteger(key, 1);
+}
+
+void Stats::decrementOrCreateInt(std::string key) {
+    Maybe<int> val = getInteger(key);
+    if (val) setInteger(key, val() - 1);
+    else     setInteger(key, -1);
+}
 namespace {
     void printTime(time_t t, std::ostream& os) {
         auto timeinfo = *localtime(&t);

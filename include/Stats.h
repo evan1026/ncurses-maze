@@ -44,6 +44,9 @@ public:
     void setBool(std::string key, bool value);
     void setTime(std::string key, time_t value);
 
+    void incrementOrCreateInt(std::string key);
+    void decrementOrCreateInt(std::string key);
+
     friend std::ostream& operator<<(std::ostream& os, const Stats& obj);
 
     static Stats& getInst();

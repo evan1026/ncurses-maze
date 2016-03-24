@@ -47,20 +47,10 @@ void Game::run() {
 
         switch(ch) {
             case KEY_UP:
-                countKeyPress("UP");
-                maze.moveUp();
-                break;
             case KEY_DOWN:
-                countKeyPress("DOWN");
-                maze.moveDown();
-                break;
             case KEY_LEFT:
-                countKeyPress("LEFT");
-                maze.moveLeft();
-                break;
             case KEY_RIGHT:
-                countKeyPress("RIGHT");
-                maze.moveRight();
+                move(ch);
                 break;
             case KEY_ENTER:
             case '\n':
@@ -114,16 +104,12 @@ void Game::run() {
 }
 
 void Game::countKeyPress() {
-    Maybe<int> pressCount = stats.getInteger("keyPressCount");
-    if (pressCount) stats.setInteger("keyPressCount", pressCount() + 1);
-    else            stats.setInteger("keyPressCount", 1);
+    stats.incrementOrCreateInt("keyPressCount");
 }
 
 void Game::countKeyPress(std::string keyName) {
     std::string statsKey = "keyPressCount_" + keyName;
-    Maybe<int> pressCount = stats.getInteger(statsKey);
-    if (pressCount) stats.setInteger(statsKey, pressCount() + 1);
-    else            stats.setInteger(statsKey, 1);
+    stats.incrementOrCreateInt(statsKey);
 
     countKeyPress();
 }
@@ -131,4 +117,31 @@ void Game::countKeyPress(std::string keyName) {
 void Game::switchRenderer() {
     renderer.setColor(!renderer.getColor());
     maze.refresh();
+}
+
+void Game::move(int direction) {
+    bool res;
+
+    if (direction == KEY_UP) {
+        countKeyPress("UP");
+        res = maze.moveUp();
+    } else if (direction == KEY_DOWN) {
+        countKeyPress("DOWN");
+        res = maze.moveDown();
+    } else if (direction == KEY_LEFT) {
+        countKeyPress("LEFT");
+        res = maze.moveLeft();
+    } else if (direction == KEY_RIGHT) {
+        countKeyPress("RIGHT");
+        res = maze.moveRight();
+    } else {
+        std::cerr << "Error in game.cpp - Game::Move - Invalid argument." << std::endl;
+        return;
+    }
+
+    if (res) {
+        stats.incrementOrCreateInt("spacesMoved");
+    } else {
+        stats.incrementOrCreateInt("blockedMoves");
+    }
 }
