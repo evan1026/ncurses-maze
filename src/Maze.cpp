@@ -20,12 +20,12 @@ Maze::Maze(int _width, int _height, MazeGeneratorType g) : modifiedPoints(), wid
 Maze::Maze(int width, int height) : Maze(width, height, MazeGeneratorType::PRIMS) {}
 
 void Maze::initGrid() {
-    for (int i = 0; i < height; ++i) {
-        for (int j = 0; j < width; ++j) {
-            if (i % 2 == 0 || j % 2 == 0) cells[i][j] = MazeCell(MazeCell::Type::WALL, MazeCell::Properties::NONE);
-            else                          cells[i][j] = MazeCell(MazeCell::Type::OPEN, MazeCell::Properties::NONE);
+    for (int y = 0; y < height; ++y) {
+        for (int x = 0; x < width; ++x) {
+            if (x % 2 == 0 || y % 2 == 0) getRef(x,y) = MazeCell(MazeCell::Type::WALL, MazeCell::Properties::NONE);
+            else                          getRef(x,y) = MazeCell(MazeCell::Type::OPEN, MazeCell::Properties::NONE);
 
-            modifiedPoints.push(Point(i,j));
+            modifiedPoints.push(Point(x,y));
         }
     }
 }
