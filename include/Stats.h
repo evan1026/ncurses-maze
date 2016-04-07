@@ -7,26 +7,14 @@
 #include <unordered_map>
 
 #include "Maybe.h"
-
-struct Statistic {
-    enum class Type {INT, DOUBLE, STRING, BOOL, TIME, NONE} type;
-    struct Value {int i; double d; bool b;
-        time_t t; std::string s;} value; //was going to be union, but I can't do that with strings
-
-    Statistic() : type(Type::NONE), value() {} // to make it compatible with Maybe
-    Statistic(int i) : type(Type::INT) { value.i = i; }
-    Statistic(double d) : type(Type::DOUBLE) { value.d = d; }
-    Statistic(std::string s) : type(Type::STRING) { value.s = s; }
-    Statistic(bool b) : type(Type::BOOL) { value.b = b; }
-    Statistic(time_t t) : type(Type::TIME) { value.t = t; }
-};
+#include "StatisticVal.h"
 
 class Stats {
-    std::unordered_map<std::string, Statistic> stats;
+    std::unordered_map<std::string, StatisticVal> stats;
     static std::unique_ptr<Stats> inst;
 
-    Maybe<Statistic> getStat(std::string key);
-    void setStat(std::string key, Statistic value);
+    Maybe<StatisticVal> getStat(std::string key);
+    void setStat(std::string key, StatisticVal value);
 
     Stats() : stats() {}
 

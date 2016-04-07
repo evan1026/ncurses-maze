@@ -3,90 +3,92 @@
 #include <string>
 
 #include "Stats.h"
+#include "Maybe.h"
+#include "StatisticVal.h"
 
 std::unique_ptr<Stats> Stats::inst = std::unique_ptr<Stats>(new Stats());
 
-Maybe<Statistic> Stats::getStat(std::string key) {
+Maybe<StatisticVal> Stats::getStat(std::string key) {
     auto testIter = stats.find(key);
     if (testIter != stats.end()) {
-        return Maybe<Statistic>(testIter->second);
+        return Maybe<StatisticVal>(testIter->second);
     } else {
-        return Maybe<Statistic>();
+        return Maybe<StatisticVal>();
     }
 }
 
-void Stats::setStat(std::string key, Statistic value) {
+void Stats::setStat(std::string key, StatisticVal value) {
     stats[key] = value;
 }
 
 Maybe<int> Stats::getInteger(std::string key) {
-    Maybe<Statistic> stat = getStat(key);
+    Maybe<StatisticVal> stat = getStat(key);
 
-    if (stat && stat().type == Statistic::Type::INT) {
-        return Maybe<int>(stat().value.i);
+    if (stat && stat().type == StatisticVal::Type::INT) {
+        return Maybe<int>(stat().getInt());
     } else {
         return Maybe<int>();
     }
 }
 
 Maybe<double> Stats::getDouble(std::string key) {
-    Maybe<Statistic> stat = getStat(key);
+    Maybe<StatisticVal> stat = getStat(key);
 
-    if (stat && stat().type == Statistic::Type::DOUBLE) {
-        return Maybe<double>(stat().value.d);
+    if (stat && stat().type == StatisticVal::Type::DOUBLE) {
+        return Maybe<double>(stat().getDouble());
     } else {
         return Maybe<double>();
     }
 }
 
 Maybe<std::string> Stats::getString(std::string key) {
-    Maybe<Statistic> stat = getStat(key);
+    Maybe<StatisticVal> stat = getStat(key);
 
-    if (stat && stat().type == Statistic::Type::STRING) {
-        return Maybe<std::string>(stat().value.s);
+    if (stat && stat().type == StatisticVal::Type::STRING) {
+        return Maybe<std::string>(stat().getString());
     } else {
         return Maybe<std::string>();
     }
 }
 
 Maybe<bool> Stats::getBool(std::string key) {
-    Maybe<Statistic> stat = getStat(key);
+    Maybe<StatisticVal> stat = getStat(key);
 
-    if (stat && stat().type == Statistic::Type::BOOL) {
-        return Maybe<bool>(stat().value.b);
+    if (stat && stat().type == StatisticVal::Type::BOOL) {
+        return Maybe<bool>(stat().getBool());
     } else {
         return Maybe<bool>();
     }
 }
 
 Maybe<time_t> Stats::getTime(std::string key) {
-    Maybe<Statistic> stat = getStat(key);
+    Maybe<StatisticVal> stat = getStat(key);
 
-    if (stat && stat().type == Statistic::Type::TIME) {
-        return Maybe<time_t>(stat().value.t);
+    if (stat && stat().type == StatisticVal::Type::TIME) {
+        return Maybe<time_t>(stat().getTime());
     } else {
         return Maybe<time_t>();
     }
 }
 
 void Stats::setInteger(std::string key, int value) {
-    setStat(key, Statistic(value));
+    setStat(key, StatisticVal(value));
 }
 
 void Stats::setDouble(std::string key, double value) {
-    setStat(key, Statistic(value));
+    setStat(key, StatisticVal(value));
 }
 
 void Stats::setString(std::string key, std::string value) {
-    setStat(key, Statistic(value));
+    setStat(key, StatisticVal(value));
 }
 
 void Stats::setBool(std::string key, bool value) {
-    setStat(key, Statistic(value));
+    setStat(key, StatisticVal(value));
 }
 
 void Stats::setTime(std::string key, time_t value) {
-    setStat(key, Statistic(value));
+    setStat(key, StatisticVal(value));
 }
 
 void Stats::incrementOrCreateInt(std::string key) {
@@ -100,15 +102,6 @@ void Stats::decrementOrCreateInt(std::string key) {
     if (val) setInteger(key, val() - 1);
     else     setInteger(key, -1);
 }
-namespace {
-    void printTime(time_t t, std::ostream& os) {
-        auto timeinfo = *localtime(&t);
-        char buf[80];
-
-        strftime(buf,80,"%m-%d-%Y %I:%M:%S",&timeinfo);
-        os << buf;
-    }
-}
 
 std::ostream& operator<<(std::ostream& os, const Stats& obj) {
     int maxLength = 0;
@@ -120,30 +113,7 @@ std::ostream& operator<<(std::ostream& os, const Stats& obj) {
     os << std::endl << "Stats:" << std::endl;
     for (auto iter = obj.stats.begin(); iter != obj.stats.end(); iter++) {
         os << "    " << std::setw(maxLength) << iter->first << " : ";
-
-        switch (iter->second.type) {
-            case Statistic::Type::INT:
-                os << iter->second.value.i;
-                break;
-            case Statistic::Type::DOUBLE:
-                os << iter->second.value.d;
-                break;
-            case Statistic::Type::STRING:
-                os << iter->second.value.s;
-                break;
-            case Statistic::Type::BOOL:
-                os << (iter->second.value.b ? "true" : "false");
-                break;
-            case Statistic::Type::TIME:
-                printTime(iter->second.value.t, os);
-                break;
-            case Statistic::Type::NONE:
-                os << "NONE_TYPE";
-                break;
-            default:
-                os << "UNKNOWN_TYPE";
-        }
-        os << std::endl;
+        os << iter->second << std::endl;
     }
     return os;
 }
