@@ -35,23 +35,23 @@ MazeGeneratorType getMGTypeFromName(char* arg);
 void handleArg(struct argp_state* state, char* arg, Args& a);
 
 int main(int argc, char* argv[]) {
-    bool win;
+    Stats& s = Stats::getInst();
 
     {
         Args a;
         argp_parse(&argp, argc, argv, 0, 0, &a);
         Game game(a.renderer, a.width, a.height, a.generator);
         game.run();
-        win = game.win();
     }
 
-    if (win) {
+    if (s.getBool("win")) {
         std::cout << "You win!" << std::endl;
+        if (s.getBool("cheated")) {
+            std::cout << "But you cheated so it doesn't really count." << std::endl;
+        }
     } else {
         std::cout << "Quitter!" << std::endl;
     }
-
-    Stats s = Stats::getInst();
 
     std::cout << s;
 
