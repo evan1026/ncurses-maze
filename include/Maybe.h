@@ -1,35 +1,70 @@
 #ifndef MAYBE_H
 #define MAYBE_H
 
-#include <exception>
+#include <stdexcept>
 
-class null_maybe_exception : public std::exception {
-    virtual const char* what() const throw() {
-        return "Atempt to turn a null Maybe into a value.";
-    }
+class null_maybe_exception : public std::runtime_error {
+public:
+    null_maybe_exception() : runtime_error("Atempt to turn a null Maybe into a value.") {}
 };
 
 template <typename T>
-struct Maybe {
-    bool isNull;
-    T value;
+class Maybe {
+    T* value;
 
-    Maybe<T>(bool _isNull, T val) : isNull(_isNull), value(val) {}
-    Maybe<T>(T val) : isNull(false), value(val) {}
-    Maybe<T>() : isNull(true) {}
+public:
+    Maybe<T>(const T val) {
+        value = new T;
+        *value = val;
+    }
+    Maybe<T>() {
+        value = nullptr;
+    }
 
-    Maybe<T> operator=(T val) {
-        value = val;
-        isNull = false;
+    ~Maybe<T>() {
+        if (value != nullptr) {
+            delete value;
+        }
+    }
+    Maybe<T>(const Maybe<T>& other) {
+        value = new T;
+        *value = *other.value;
+    }
+    Maybe<T>(Maybe<T>&& other) {
+        value = other.value;
+        other.value = nullptr;
+    }
+
+    Maybe<T>& operator=(const Maybe<T>& other) {
+        if (value != nullptr) {
+            delete value;
+        }
+        value = new T;
+        *value = *other.value;
+    }
+    Maybe<T>& operator=(Maybe<T>&& other) {
+        if (value != nullptr){
+            delete value;
+        }
+        value = other.value;
+        other.value = nullptr;
+    }
+
+    Maybe<T>& operator=(const T& val) {
+        if (value != nullptr) {
+            delete value;
+        }
+        value = new T;
+        *value = val;
     }
 
     operator bool() const {
-        return !isNull;
+        return value != nullptr;
     }
 
-    T& operator()() {
-        if (isNull) throw null_maybe_exception();
-        else return value;
+    T operator()() {
+        if (*this) return *value;
+        else throw null_maybe_exception();
     }
 };
 
