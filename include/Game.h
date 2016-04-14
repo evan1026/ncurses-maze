@@ -27,7 +27,7 @@ public:
 
     void run();
 
-    bool win() { return stats.getBool("win")(); }
+    bool win() { return stats.get<bool>("win")(); }
 };
 
 #endif

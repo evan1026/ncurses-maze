@@ -44,9 +44,11 @@ int main(int argc, char* argv[]) {
         game.run();
     }
 
-    if (s.getBool("win")) {
+    if (s.get<bool>("win")()) {
         std::cout << "You win!" << std::endl;
-        if (s.getBool("cheated")) {
+
+        auto c = s.get<bool>("cheated");
+        if (c && c()) {
             std::cout << "But you cheated so it doesn't really count." << std::endl;
         }
     } else {
@@ -55,7 +57,7 @@ int main(int argc, char* argv[]) {
 
     std::cout << s;
 
-    std::cout << "Elapsed time: " << s.getTime("endTime")() - s.getTime("startTime")() << "s" << std::endl;
+    std::cout << "Elapsed time: " << s.get<time_t>("endTime")() - s.get<time_t>("startTime")() << "s" << std::endl;
 }
 
 static error_t parse_opt(int key, char* arg, struct argp_state* state) {

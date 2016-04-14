@@ -7,30 +7,30 @@
 #include <unordered_map>
 
 #include "Maybe.h"
-#include "StatisticVal.h"
+#include "Statistic.h"
 
 class Stats {
-    std::unordered_map<std::string, StatisticVal> stats;
+    std::unordered_map<std::string, Statistic> stats;
     static std::unique_ptr<Stats> inst;
-
-    Maybe<StatisticVal> getStat(std::string key);
-    void setStat(std::string key, StatisticVal value);
 
     Stats() : stats() {}
 
 public:
 
-    Maybe<int> getInteger(std::string key);
-    Maybe<double> getDouble(std::string key);
-    Maybe<std::string> getString(std::string key);
-    Maybe<bool> getBool(std::string key);
-    Maybe<time_t> getTime(std::string key);
+    template <typename T>
+    Maybe<T> get(const std::string& key) const {
+        auto testIter = stats.find(key);
+        if (testIter != stats.end() && testIter->second.checkType<T>()) {
+            return Maybe<T>(testIter->second.get<T>());
+        } else {
+            return Maybe<T>();
+        }
+    }
 
-    void setInteger(std::string, int value);
-    void setDouble(std::string key, double value);
-    void setString(std::string key, std::string value);
-    void setBool(std::string key, bool value);
-    void setTime(std::string key, time_t value);
+    template <typename T>
+    void set(const std::string& key, const T& val) {
+        stats[key] = Statistic(val);
+    }
 
     void incrementOrCreateInt(std::string key);
     void decrementOrCreateInt(std::string key);

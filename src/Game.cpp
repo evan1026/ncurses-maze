@@ -31,8 +31,8 @@ Game::Game(RenderType rt, int width, int height, MazeGeneratorType t) :
             break;
     }
 
-    stats.setBool("win", false);
-    stats.setTime("startTime", time(nullptr));
+    stats.set<bool>("win", false);
+    stats.set<time_t>("startTime", time(nullptr));
 }
 
 void Game::run() {
@@ -63,7 +63,7 @@ void Game::run() {
                 break;
             case ' ':
                 countKeyPress("SPACE");
-                stats.setBool("cheated", true);
+                stats.set<bool>("cheated", true);
                 if (solver.inProgress()) {
                     solver.stop();
                     delayMS = DEFAULT_DELAY;
@@ -94,13 +94,13 @@ void Game::run() {
 
         if (maze.getCurrentPosition() == maze.end) {
             looping = false;
-            stats.setBool("win", true);
+            stats.set<bool>("win", true);
         }
 
         renderer.render(maze);
         std::this_thread::sleep_for(std::chrono::milliseconds(delayMS));
     }
-    stats.setTime("endTime", time(nullptr));
+    stats.set<time_t>("endTime", time(nullptr));
 }
 
 void Game::countKeyPress() {
