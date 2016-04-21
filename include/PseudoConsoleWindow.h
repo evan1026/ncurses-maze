@@ -6,7 +6,18 @@
 
 #include "Point.h"
 
-//Not meant to be displayed, just written to and read from
+/**************************************************************************
+ * ~~~~~~~~~~~~~~~~~~~~~~~                                                *
+ * ~ PseudoConsoleWindow ~                                                *
+ * ~~~~~~~~~~~~~~~~~~~~~~~                                                *
+ *                                                                        *
+ * A collection of chtype's that acts like a console window (in that it   *
+ * can be written to and read from) but is not actually displayed. This   *
+ * is meant to serve as a buffer to the actual console.                   *
+ *                                                                        *
+ * Full docs on each function can be found in the corresponding cpp file. *
+ **************************************************************************/
+
 class PseudoConsoleWindow {
     int width,
         height;

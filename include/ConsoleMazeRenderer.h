@@ -5,6 +5,17 @@
 #include "CursesInstance.h"
 #include "Maze.h"
 
+/**************************************************************************
+ * ~~~~~~~~~~~~~~~~~~~~~~~                                                *
+ * ~ ConsoleMazeRenderer ~                                                *
+ * ~~~~~~~~~~~~~~~~~~~~~~~                                                *
+ *                                                                        *
+ * This class is responsible for rendering the maze to the console.       *
+ * It serves as the link between the Maze class and the CursesInstance.   *
+ *                                                                        *
+ * Full docs on each function can be found in the corresponding cpp file. *
+ **************************************************************************/
+
 class ConsoleMazeRenderer {
     ConsoleViewport mazeWindow;
     CursesInstance curses;

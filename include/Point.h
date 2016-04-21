@@ -1,6 +1,16 @@
 #ifndef POINT_H
 #define POINT_H
 
+/**************************************************************************
+ * ~~~~~~~~~                                                              *
+ * ~ Point ~                                                              *
+ * ~~~~~~~~~                                                              *
+ *                                                                        *
+ * Represents a point on the maze or an offset, depending on how it's     *
+ * being used. This file also defines a number of operators for comparing *
+ * and manipulating points.                                               *
+ **************************************************************************/
+
 struct Point {
     int x,
         y;

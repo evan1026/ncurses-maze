@@ -3,6 +3,16 @@
 
 #include "Maze.h"
 
+/**********************************************************************
+ * ~~~~~~~~~~~~~~~~~                                                  *
+ * ~ MazeGenerator ~                                                  *
+ * ~~~~~~~~~~~~~~~~~                                                  *
+ *                                                                    *
+ * An abstract class that serves as the base for all types of maze    *
+ * generators. The main function, generate(), takes in the blank maze *
+ * and modifies it to be an actual, solvable maze.                    *
+ **********************************************************************/
+
 class MazeGenerator {
 
 protected:

@@ -1,6 +1,14 @@
 #ifndef MAZE_CELL_H
 #define MAZE_CELL_H
 
+/*************************************************************************
+ * ~~~~~~~~~~~~                                                          *
+ * ~ MazeCell ~                                                          *
+ * ~~~~~~~~~~~~                                                          *
+ *                                                                       *
+ * A simple data type that holds information about each cell in the maze *
+ *************************************************************************/
+
 struct MazeCell {
     enum class Type {
         OPEN,

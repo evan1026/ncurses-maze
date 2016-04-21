@@ -1,9 +1,19 @@
 #ifndef TYPE_MISMATCH_EXCEPTION_H
 #define TYPE_MISMATCH_EXCEPTION_H
 
-#include <typeinfo>
-#include <stdexcept>
 #include <sstream>
+#include <stdexcept>
+#include <typeinfo>
+
+/****************************************************************************
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~                                                *
+ * ~ TypeMismatchException ~                                                *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~                                                *
+ *                                                                          *
+ * This exception is thrown when the type expected does not match the type  *
+ * received. It will also print the line number and file name, if supplied. *
+ * This is used in the Statstic class (see Statistic.h).                    *
+ ****************************************************************************/
 
 class TypeMismatchException : public std::runtime_error {
     std::string expected, got, other;

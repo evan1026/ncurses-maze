@@ -1,6 +1,14 @@
 #ifndef DIMENSION_H
 #define DIMENSION_H
 
+/****************************************************************
+ * ~~~~~~~~~~~~~                                                *
+ * ~ Dimension ~                                                *
+ * ~~~~~~~~~~~~~                                                *
+ *                                                              *
+ * A simple container that holds x, y, width, and height values *
+ ****************************************************************/
+
 struct Dimension {
     int x,
         y,

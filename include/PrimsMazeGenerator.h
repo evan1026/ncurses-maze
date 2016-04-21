@@ -5,6 +5,17 @@
 #include "MazeGenerator.h"
 #include "Point.h"
 
+/**************************************************************************
+ * ~~~~~~~~~~~~~~~~~~~~~~                                                 *
+ * ~ PrimsMazeGenerator ~                                                 *
+ * ~~~~~~~~~~~~~~~~~~~~~~                                                 *
+ *                                                                        *
+ * A maze generator that uses a randomized version of Prim's algorithm.   *
+ * Information about how it works can be found at https://goo.gl/xWWZAj   *
+ *                                                                        *
+ * Full docs on each function can be found in the corresponding cpp file. *
+ **************************************************************************/
+
 class PrimsMazeGenerator : public MazeGenerator {
     static Point directions[];
     Point start;

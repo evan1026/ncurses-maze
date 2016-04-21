@@ -1,14 +1,24 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include <memory>
-
 #include "ConsoleMazeRenderer.h"
 #include "CursesInstance.h"
 #include "Maze.h"
 #include "MazeGeneratorType.h"
 #include "RenderType.h"
 #include "Stats.h"
+
+/**************************************************************************
+ * ~~~~~~~~                                                               *
+ * ~ Game ~                                                               *
+ * ~~~~~~~~                                                               *
+ *                                                                        *
+ * A class that represents the entire game as a whole. This initializes   *
+ * the components and links them up as needed, as well as runs the main   *
+ * loop which handles dispatching input and output.                       *
+ *                                                                        *
+ * Full docs on each function can be found in the corresponding cpp file. *
+ **************************************************************************/
 
 class Game {
     Maze maze;

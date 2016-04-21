@@ -6,6 +6,20 @@
 #include "CursesInstance.h"
 #include "Point.h"
 
+/**************************************************************************
+ * ~~~~~~~~~~~~~~~~~                                                      *
+ * ~ ConsoleWindow ~                                                      *
+ * ~~~~~~~~~~~~~~~~~                                                      *
+ *                                                                        *
+ * This class represents a window that is drawn to the console. It also   *
+ * serves as a wrapper for the primitive ncurses WINDOW, and will         *
+ * handle managing the memory for the window as well as writing to and    *
+ * reading from it. Most of these functions simply forward to the         *
+ * CursesInstance, which wraps the ncurses C functions.                   *
+ *                                                                        *
+ * Full docs on each function can be found in the corresponding cpp file. *
+ **************************************************************************/
+
 class ConsoleWindow {
     CursesInstance curses;
     WINDOW* window;
@@ -37,4 +51,5 @@ public:
     int getX();
     int getY();
 };
+
 #endif

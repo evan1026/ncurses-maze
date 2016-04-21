@@ -9,6 +9,18 @@
 #include "MazeGeneratorType.h"
 #include "Point.h"
 
+/**************************************************************************
+ * ~~~~~~~~                                                               *
+ * ~ Maze ~                                                               *
+ * ~~~~~~~~                                                               *
+ *                                                                        *
+ * This class represents the maze as a whole, and provides utility for    *
+ * getting information about the maze, as well as moving about it and     *
+ * modifying it.                                                          *
+ *                                                                        *
+ * Full docs on each function can be found in the corresponding cpp file. *
+ **************************************************************************/
+
 class Maze {
     std::queue<Point> modifiedPoints;
 
@@ -24,6 +36,11 @@ public:
     const int width;
     const int height;
 
+private:
+    std::vector< std::vector< MazeCell > > cells; //It's much easier to initialize if this is declared after width and height
+    Point currentPosition;
+
+public:
     const Point start;
     const Point end;
 
@@ -64,11 +81,6 @@ public:
     Point popNextModifiedPoint();
     void refresh();
 
-private:
-    std::vector< std::vector< MazeCell > > cells; //It's much easier to initialize if this is declared after width and height
-    Point currentPosition;
-
-public:
     class Solver {
         Maze& maze;
         bool inprogress = false;
