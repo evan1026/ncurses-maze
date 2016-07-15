@@ -1,10 +1,10 @@
-files=$(find $(dirname $0) -type f | xargs grep TODO)
+files=$(cd $(dirname $0); grep -R TODO)
 
 set -f              # turn off globbing
 IFS='
 '                   # split at newlines only'
 for file in $files; do
-  if [[ $file != *$0* ]]; then
+  if [[ $file != *"$(basename $0)"* ]]; then
     echo $file
   fi
 done

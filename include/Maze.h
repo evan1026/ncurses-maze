@@ -36,14 +36,14 @@ public:
     const int width;
     const int height;
 
+    const Point start;
+    const Point end;
+
 private:
     std::vector< std::vector< MazeCell > > cells; //It's much easier to initialize if this is declared after width and height
     Point currentPosition;
 
 public:
-    const Point start;
-    const Point end;
-
     Maze(int width, int height);
     Maze(int width, int height, MazeGeneratorType g);
 
