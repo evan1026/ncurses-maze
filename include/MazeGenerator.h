@@ -1,7 +1,7 @@
 #ifndef MAZE_GENERATOR_H
 #define MAZE_GENERATOR_H
 
-#include "Maze.h"
+class Maze; //To avoid circular dependency
 
 /**********************************************************************
  * ~~~~~~~~~~~~~~~~~                                                  *
@@ -26,6 +26,21 @@ public:
     MazeGenerator& operator=(MazeGenerator&& m) = default;
 
     virtual void generate(Maze& m) = 0;
+
+
+    /**********************************************************************
+     * ~~~~~~~~~~~~~~~~~~~~~                                              *
+     * ~ MazeGeneratorType ~                                              *
+     * ~~~~~~~~~~~~~~~~~~~~~                                              *
+     *                                                                    *
+     * An enumeration for keeping track of which generator is being used. *
+     **********************************************************************/
+
+    enum class Type {
+        DFS,
+        PRIMS,
+        UNKNOWN
+    };
 };
 
 #endif

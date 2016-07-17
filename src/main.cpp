@@ -2,7 +2,7 @@
 #include <string>
 
 #include "Game.h"
-#include "MazeGeneratorType.h"
+#include "MazeGenerator.h"
 #include "RenderType.h"
 
 extern "C" {
@@ -23,15 +23,15 @@ extern "C" {
 struct Args {
     int width;
     int height;
-    MazeGeneratorType generator;
+    MazeGenerator::Type generator;
     RenderType renderer;
 
-    Args(int w, int h, MazeGeneratorType g, RenderType r) : width(w), height(h), generator(g), renderer(r) {}
-    Args() : Args(-1, -1, MazeGeneratorType::PRIMS, RenderType::CONSOLE_RENDER_DEFAULT) {}
+    Args(int w, int h, MazeGenerator::Type g, RenderType r) : width(w), height(h), generator(g), renderer(r) {}
+    Args() : Args(-1, -1, MazeGenerator::Type::PRIMS, RenderType::CONSOLE_RENDER_DEFAULT) {}
     bool valid() { return width > 0 && height > 0; }
 };
 
-MazeGeneratorType getMGTypeFromName(char* arg);
+MazeGenerator::Type getMGTypeFromName(char* arg);
 void handleArg(struct argp_state* state, char* arg, Args& a);
 
 int main(int argc, char* argv[]) {
@@ -66,7 +66,7 @@ static error_t parse_opt(int key, char* arg, struct argp_state* state) {
     switch (key) {
         case 'g':
             a.generator = getMGTypeFromName(arg);
-            if (a.generator == MazeGeneratorType::UNKNOWN) {
+            if (a.generator == MazeGenerator::Type::UNKNOWN) {
                 argp_error(state, "unknown generator -- '%s'", arg);
             }
             break;
@@ -88,18 +88,18 @@ static error_t parse_opt(int key, char* arg, struct argp_state* state) {
     return 0;
 }
 
-MazeGeneratorType getMGTypeFromName(char* arg) {
+MazeGenerator::Type getMGTypeFromName(char* arg) {
     std::string s(arg);
     for (int i = 0; i < s.size(); ++i) {
         s.at(i) = toupper(s.at(i));
     }
 
     if (s == "PRIMS") {
-        return MazeGeneratorType::PRIMS;
+        return MazeGenerator::Type::PRIMS;
     } else if (s == "DFS") {
-        return MazeGeneratorType::DFS;
+        return MazeGenerator::Type::DFS;
     } else {
-        return MazeGeneratorType::UNKNOWN;
+        return MazeGenerator::Type::UNKNOWN;
     }
 }
 

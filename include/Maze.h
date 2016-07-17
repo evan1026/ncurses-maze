@@ -6,7 +6,7 @@
 
 #include "CursesInstance.h"
 #include "MazeCell.h"
-#include "MazeGeneratorType.h"
+#include "MazeGenerator.h"
 #include "Point.h"
 
 /**************************************************************************
@@ -45,9 +45,9 @@ private:
 
 public:
     Maze(int width, int height);
-    Maze(int width, int height, MazeGeneratorType g);
+    Maze(int width, int height, MazeGenerator::Type g);
 
-    void generate(MazeGeneratorType g);
+    void generate(MazeGenerator::Type g);
 
     MazeCell get(int x, int y);
     MazeCell get(Point p);

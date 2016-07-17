@@ -9,13 +9,13 @@
 #include "ConsoleMazeRenderer.h"
 #include "Game.h"
 #include "Maybe.h"
-#include "MazeGeneratorType.h"
+#include "MazeGenerator.h"
 #include "RenderType.h"
 
 #define DEFAULT_DELAY 33
 #define NO_DELAY 0
 
-Game::Game(RenderType rt, int width, int height, MazeGeneratorType t) :
+Game::Game(RenderType rt, int width, int height, MazeGenerator::Type t) :
             maze(width, height, t), curses(), stats(Stats::getInst()), solver(maze),
             renderer(maze.width, maze.height) {
 

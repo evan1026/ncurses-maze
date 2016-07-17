@@ -4,7 +4,7 @@
 #include "ConsoleMazeRenderer.h"
 #include "CursesInstance.h"
 #include "Maze.h"
-#include "MazeGeneratorType.h"
+#include "MazeGenerator.h"
 #include "RenderType.h"
 #include "Stats.h"
 
@@ -33,7 +33,7 @@ class Game {
     void move(int direction);
 
 public:
-    Game(RenderType rt, int width, int height, MazeGeneratorType t);
+    Game(RenderType rt, int width, int height, MazeGenerator::Type t);
 
     void run();
 

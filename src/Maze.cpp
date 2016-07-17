@@ -5,19 +5,18 @@
 #include "Maze.h"
 #include "MazeCell.h"
 #include "MazeGenerator.h"
-#include "MazeGeneratorType.h"
 #include "Point.h"
 #include "PrimsMazeGenerator.h"
 #include "Stats.h"
 
-Maze::Maze(int _width, int _height, MazeGeneratorType g) : modifiedPoints(), width(2 * _width + 1), height(2 * _height + 1),
+Maze::Maze(int _width, int _height, MazeGenerator::Type g) : modifiedPoints(), width(2 * _width + 1), height(2 * _height + 1),
                start(1, 1), end(width - 2, height - 2), cells(height, std::vector< MazeCell > (width, MazeCell())),
                currentPosition(start) {
     generate(g);
     setProperties(start, MazeCell::Properties::PART_OF_PATH);
 }
 
-Maze::Maze(int width, int height) : Maze(width, height, MazeGeneratorType::PRIMS) {}
+Maze::Maze(int width, int height) : Maze(width, height, MazeGenerator::Type::PRIMS) {}
 
 void Maze::initGrid() {
     for (int y = 0; y < height; ++y) {
@@ -30,14 +29,14 @@ void Maze::initGrid() {
     }
 }
 
-void Maze::generate(MazeGeneratorType g) {
+void Maze::generate(MazeGenerator::Type g) {
     initGrid();
 
     MazeGenerator* generator;
 
-    if (g == MazeGeneratorType::DFS) {
+    if (g == MazeGenerator::Type::DFS) {
         generator = new DFSMazeGenerator();
-    } else if (g == MazeGeneratorType::PRIMS) {
+    } else if (g == MazeGenerator::Type::PRIMS) {
         generator = new PrimsMazeGenerator();
     } else {
         std::cerr << "MazeGeneratorType not recognized in Maze.cpp line " << __LINE__ << std::endl;
