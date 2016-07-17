@@ -35,6 +35,22 @@ public:
 
     bool getColor();
     void setColor(bool c);
+
+
+    /**************************************************************************
+     * ~~~~~~~~~~~~~~                                                         *
+     * ~ RenderType ~                                                         *
+     * ~~~~~~~~~~~~~~                                                         *
+     *                                                                        *
+     * An enumeration that keeps track of the type of render (i.e. whether or *
+     * not to use colors).                                                    *
+     **************************************************************************/
+
+    enum class RenderType {
+        COLOR,
+        NO_COLOR,
+        DEFAULT
+    };
 };
 
 #endif

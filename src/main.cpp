@@ -1,9 +1,9 @@
 #include <iostream>
 #include <string>
 
+#include "ConsoleMazeRenderer.h"
 #include "Game.h"
 #include "MazeGenerator.h"
-#include "RenderType.h"
 
 extern "C" {
     #include <argp.h>
@@ -24,10 +24,10 @@ struct Args {
     int width;
     int height;
     MazeGenerator::Type generator;
-    RenderType renderer;
+    ConsoleMazeRenderer::RenderType renderer;
 
-    Args(int w, int h, MazeGenerator::Type g, RenderType r) : width(w), height(h), generator(g), renderer(r) {}
-    Args() : Args(-1, -1, MazeGenerator::Type::PRIMS, RenderType::CONSOLE_RENDER_DEFAULT) {}
+    Args(int w, int h, MazeGenerator::Type g, ConsoleMazeRenderer::RenderType r) : width(w), height(h), generator(g), renderer(r) {}
+    Args() : Args(-1, -1, MazeGenerator::Type::PRIMS, ConsoleMazeRenderer::RenderType::DEFAULT) {}
     bool valid() { return width > 0 && height > 0; }
 };
 
@@ -71,10 +71,10 @@ static error_t parse_opt(int key, char* arg, struct argp_state* state) {
             }
             break;
         case 'c':
-            a.renderer = RenderType::CONSOLE_RENDER_COLOR;
+            a.renderer = ConsoleMazeRenderer::RenderType::COLOR;
             break;
         case 'n':
-            a.renderer = RenderType::CONSOLE_RENDER_NO_COLOR;
+            a.renderer = ConsoleMazeRenderer::RenderType::NO_COLOR;
             break;
         case ARGP_KEY_ARG:
             handleArg(state, arg, a);

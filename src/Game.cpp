@@ -10,23 +10,22 @@
 #include "Game.h"
 #include "Maybe.h"
 #include "MazeGenerator.h"
-#include "RenderType.h"
 
 #define DEFAULT_DELAY 33
 #define NO_DELAY 0
 
-Game::Game(RenderType rt, int width, int height, MazeGenerator::Type t) :
+Game::Game(ConsoleMazeRenderer::RenderType rt, int width, int height, MazeGenerator::Type t) :
             maze(width, height, t), curses(), stats(Stats::getInst()), solver(maze),
             renderer(maze.width, maze.height) {
 
     switch (rt) {
-        case RenderType::CONSOLE_RENDER_DEFAULT:
+        case ConsoleMazeRenderer::RenderType::DEFAULT:
             renderer = ConsoleMazeRenderer(maze.width, maze.height);
             break;
-        case RenderType::CONSOLE_RENDER_COLOR:
+        case ConsoleMazeRenderer::RenderType::COLOR:
             renderer = ConsoleMazeRenderer(maze.width, maze.height, true);
             break;
-        case RenderType::CONSOLE_RENDER_NO_COLOR:
+        case ConsoleMazeRenderer::RenderType::NO_COLOR:
             renderer = ConsoleMazeRenderer(maze.width, maze.height, false);
             break;
     }
